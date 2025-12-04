@@ -1,0 +1,21 @@
+﻿using Core.Entities.Abstractions;
+using Entities.Enums;
+using System;
+
+namespace Entities.Concrete
+{
+    public class Telefon : EntityBase
+    {
+        public Guid TelefonUuid { get; set; } = Guid.NewGuid();
+        public Guid KullaniciUuid { get; set; } = Guid.Empty;
+        public string UlkeKodu { get; set; } = string.Empty;
+        public string TelefonNo { get; set; } = string.Empty;
+        public TelefonTipi TelefonTipi { get; set; }
+        public bool Oncelikli { get; set; }
+        public DateTime OlusturmaTarihi { get; set; }
+        public DateTime GuncellemeTarihi { get; set; }
+
+        // Reference navigation
+        public Kullanici? Kullanici { get; set; }
+    }
+}
