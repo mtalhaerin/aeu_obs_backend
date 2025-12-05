@@ -10,14 +10,11 @@ namespace Core.DataAccess
         void Delete(T entity);
         T Get(Expression<Func<T, bool>> filter);
         IList<T> GetAll(Expression<Func<T, bool>>? filter = null);
-    }
 
-    public interface IEntityRepositoryAsync<T> where T : class, IEntity, new()
-    {
-        Task AddAsync(T entity, CancellationToken cancellationToken = default);
-        Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
-        Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
-        Task<T?> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default);
-        Task<IList<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default);
+        Task AddAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
+        Task<T?> GetAsync(Expression<Func<T, bool>> filter);
+        Task<IList<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null);
     }
 }

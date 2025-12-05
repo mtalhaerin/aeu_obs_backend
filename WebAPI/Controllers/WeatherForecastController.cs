@@ -1,5 +1,6 @@
 using Business.Concrete;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
@@ -34,11 +35,9 @@ namespace WebAPI.Controllers
         [HttpGet]
 
 
-        public IActionResult Post([FromQuery] string userUuid)
+        public async Task<IActionResult> Post([FromQuery] string userUuid)
         {
-            return Ok(_kullaniciService.GetByUuid(
-                Guid.Parse(userUuid)
-            ));
+            return Ok(await _kullaniciService.GetByUuidAsync(Guid.Parse(userUuid)));
         }
     }
 }
