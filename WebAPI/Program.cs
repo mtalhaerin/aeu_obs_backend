@@ -1,6 +1,6 @@
 using Business.Concrete;
-using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Contexts;
+using DataAccess.Concrete.EntityFramework.OzlukDals;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI

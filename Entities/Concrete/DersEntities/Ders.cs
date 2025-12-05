@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.DersEntities
 {
     public class Ders : EntityBase
     {

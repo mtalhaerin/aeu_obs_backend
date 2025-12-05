@@ -1,7 +1,8 @@
 ﻿using Core.Entities.Abstractions;
+using Entities.Concrete.OzlukEntities;
 using System;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.DersEntities
 {
     public class Not : EntityBase
     {

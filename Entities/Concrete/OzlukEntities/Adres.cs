@@ -1,7 +1,7 @@
 ﻿using Core.Entities.Abstractions;
 using System;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.OzlukEntities
 {
     public class Adres : EntityBase
     {

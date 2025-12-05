@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Business.Concrete;
-using DataAccess.Concrete.EntityFramework;
+using DataAccess.Concrete.EntityFramework.OzlukDals;
 using System;
 using System.Collections.Generic;
 using System.Linq;

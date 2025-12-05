@@ -3,7 +3,7 @@ using Entities.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.DersEntities
 {
     public class Sinav : EntityBase
     {

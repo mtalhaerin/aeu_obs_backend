@@ -1,9 +1,9 @@
 ﻿using Core.DataAccess;
 using Core.DataAccess.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using Entities.Concrete;
+using Entities.Concrete.DersEntities;
 
-namespace DataAccess.Concrete.EntityFramework
+namespace DataAccess.Concrete.EntityFramework.DersDals
 {
     public interface IOgrenciDersKayitDal : IEntityRepository<OgrenciDersKayit>
     {

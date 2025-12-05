@@ -1,9 +1,9 @@
 ﻿using Core.DataAccess;
 using Core.DataAccess.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using Entities.Concrete;
+using Entities.Concrete.OzlukEntities;
 
-namespace DataAccess.Concrete.EntityFramework
+namespace DataAccess.Concrete.EntityFramework.OzlukDals
 {
     public interface IAdresDal : IEntityRepository<Adres>
     {

@@ -1,7 +1,7 @@
 ﻿using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.DataResults;
-using DataAccess.Concrete.EntityFramework;
-using Entities.Concrete;
+using DataAccess.Concrete.EntityFramework.OzlukDals;
+using Entities.Concrete.OzlukEntities;
 using System;
 using System.Threading.Tasks;
 

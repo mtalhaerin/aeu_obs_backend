@@ -2,7 +2,7 @@
 using Entities.Enums;
 using System;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.OzlukEntities
 {
     public class Telefon : EntityBase
     {

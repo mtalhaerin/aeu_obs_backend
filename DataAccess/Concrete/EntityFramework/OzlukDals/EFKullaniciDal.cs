@@ -1,19 +1,19 @@
 ﻿using Core.DataAccess;
 using Core.DataAccess.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using Entities.Concrete;
+using Entities.Concrete.OzlukEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Concrete.EntityFramework
+namespace DataAccess.Concrete.EntityFramework.OzlukDals
 {
-    public interface IDersDal : IEntityRepository<Ders>
+    public interface IKullaniciDal : IEntityRepository<Kullanici>
     {
     }
-    public class EFDersDal : EfEntityRepositoryBase<Ders, AEUContext>, IDersDal
+    public class EFKullaniciDal : EfEntityRepositoryBase<Kullanici, AEUContext>, IKullaniciDal
     {
     }
 }

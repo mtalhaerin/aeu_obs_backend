@@ -1,19 +1,19 @@
 ﻿using Core.DataAccess;
 using Core.DataAccess.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using Entities.Concrete;
+using Entities.Concrete.DersEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Concrete.EntityFramework
+namespace DataAccess.Concrete.EntityFramework.DersDals
 {
-    public interface ITelefonDal : IEntityRepository<Telefon>
+    public interface ISinavDal : IEntityRepository<Sinav>
     {
     }
-    public class EFTelefonDal : EfEntityRepositoryBase<Telefon, AEUContext>, ITelefonDal
+    public class EFSinavDal : EfEntityRepositoryBase<Sinav, AEUContext>, ISinavDal
     {
     }
 }

@@ -1,8 +1,9 @@
 ﻿using Core.Entities.Abstractions;
+using Entities.Concrete.OzlukEntities;
 using Entities.Enums;
 using System;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.DersEntities
 {
     public class OgrenciDersKayit : EntityBase
     {

@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Entities.Concrete.DersEntities;
+using Entities.Concrete.OzlukEntities;
 using Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;

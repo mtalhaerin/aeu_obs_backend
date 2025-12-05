@@ -1,7 +1,8 @@
 ﻿using System;
 using Core.Entities.Abstractions;
+using Entities.Concrete.OzlukEntities;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.DersEntities
 {
     public class AkademisyenDersAtama : EntityBase
     {

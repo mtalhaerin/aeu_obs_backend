@@ -2,7 +2,7 @@
 using Entities.Enums;
 using System.Collections.Generic;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.OzlukEntities
 {
     public class Eposta : EntityBase
     {

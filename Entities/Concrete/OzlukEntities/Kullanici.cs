@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.OzlukEntities
 {
     public class Kullanici : EntityBase
     {
