@@ -2,10 +2,10 @@
 {
     public enum SinavTipi
     {
-        VIZE,
-        FINAL,
-        QUIZ,
-        PROJE,
-        BUTUNLEME
+        QUIZ = 0,
+        VIZE = 1,
+        FINAL = 2,
+        PROJE = 3,
+        BUTUNLEME = 4
     }
 }

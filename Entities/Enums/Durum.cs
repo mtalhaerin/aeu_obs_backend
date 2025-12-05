@@ -2,8 +2,8 @@
 {
     public enum Durum
     {
-        PASIF,
-        AKTIF,
-        MEZUN
+        DEVAMEDIYOR = 0,
+        GECTI = 1,
+        KALDI = 2
     }
 }

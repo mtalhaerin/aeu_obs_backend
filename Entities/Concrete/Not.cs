@@ -8,7 +8,7 @@ namespace Entities.Concrete
         public Guid NotUuid { get; set; } = Guid.NewGuid();
         public Guid SinavUuid { get; set; } = Guid.Empty;
         public Guid OgrenciUuid { get; set; } = Guid.Empty;
-        public int AlinanPuan { get; set; }
+        public int AlinanPuan { get; set; } = 0;
         public DateTime OlusturmaTarihi { get; set; }
         public DateTime GuncellemeTarihi { get; set; }
 

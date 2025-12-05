@@ -2,8 +2,8 @@
 {
     public enum EpostaTipi
     {
-        KISISEL,
-        IS,
-        DIGER
+        KISISEL = 0,
+        IS = 1,
+        DIGER = 2
     }
 }

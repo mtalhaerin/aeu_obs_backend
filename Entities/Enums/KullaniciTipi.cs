@@ -2,8 +2,8 @@
 {
     public enum KullaniciTipi
     {
-        OGRENCI,
-        AKADEMISYEN,
-        PERSONEL
+        OGRENCI = 0,
+        AKADEMISYEN = 1,
+        PERSONEL = 2
     }
 }

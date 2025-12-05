@@ -9,10 +9,10 @@ namespace Entities.Concrete
     {
         public Guid SinavUuid { get; set; } = Guid.NewGuid();
         public Guid DersUuid { get; set; } = Guid.Empty;
-        public SinavTipi SinavTipi { get; set; }
-        public DateTime SinavTarih { get; set; }
-        public int ToplamPuan { get; set; }
-        public decimal SinavAgirligi { get; set; }
+        public SinavTipi SinavTipi { get; set; } = SinavTipi.QUIZ;
+        public DateTime SinavTarih { get; set; } = DateTime.UtcNow; // UTC+0
+        public int ToplamPuan { get; set; } = 100;
+        public decimal SinavAgirligi { get; set; } = 0;
         public DateTime OlusturmaTarihi { get; set; }
         public DateTime GuncellemeTarihi { get; set; }
 

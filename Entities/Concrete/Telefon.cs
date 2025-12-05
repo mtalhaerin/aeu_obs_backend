@@ -10,8 +10,8 @@ namespace Entities.Concrete
         public Guid KullaniciUuid { get; set; } = Guid.Empty;
         public string UlkeKodu { get; set; } = string.Empty;
         public string TelefonNo { get; set; } = string.Empty;
-        public TelefonTipi TelefonTipi { get; set; }
-        public bool Oncelikli { get; set; }
+        public TelefonTipi TelefonTipi { get; set; } = TelefonTipi.CEP;
+        public bool Oncelikli { get; set; } = false;
         public DateTime OlusturmaTarihi { get; set; }
         public DateTime GuncellemeTarihi { get; set; }
 

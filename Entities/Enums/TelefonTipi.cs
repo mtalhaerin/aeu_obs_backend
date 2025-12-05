@@ -2,8 +2,8 @@
 {
     public enum TelefonTipi
     {
-        CEP,
-        EV,
-        IS
+        CEP = 0,
+        EV = 1,
+        IS = 2
     }
 }

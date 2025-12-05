@@ -10,9 +10,9 @@ namespace Entities.Concrete
     public class Kullanici : EntityBase
     {
         public Guid KullaniciUuid { get; set; } = Guid.NewGuid();
-        public string KullaniciTipi { get; set; } = string.Empty;
+        public KullaniciTipi KullaniciTipi { get; set; } = KullaniciTipi.OGRENCI;
         public string Ad { get; set; } = string.Empty;
-        public string OrtaAd { get; set; } = string.Empty;
+        public string? OrtaAd { get; set; } = null;
         public string Soyad { get; set; } = string.Empty;
         public string KurumEposta { get; set; } = string.Empty;
         public string KurumSicilNo { get; set; } = string.Empty;

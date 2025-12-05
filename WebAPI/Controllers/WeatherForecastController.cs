@@ -34,10 +34,10 @@ namespace WebAPI.Controllers
         [HttpGet]
 
 
-        public IActionResult Post()
+        public IActionResult Post([FromQuery] string userUuid)
         {
             return Ok(_kullaniciService.GetByUuid(
-                Guid.Parse("11111111-1111-1111-1111-111111111111")
+                Guid.Parse(userUuid)
             ));
         }
     }

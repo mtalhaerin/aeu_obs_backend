@@ -28,7 +28,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         public DbSet<Eposta> Epostalar { get; set; }
         public DbSet<Kullanici> Kullanicilar { get; set; }
         public DbSet<Not> Notlar { get; set; }
-        public DbSet<OgrenciKayit> OgrenciKayitlari { get; set; }
+        public DbSet<OgrenciDersKayit> OgrenciDersKayitlari { get; set; }
         public DbSet<Sinav> Sinavlar { get; set; }
         public DbSet<Telefon> Telefonlar { get; set; }
 
@@ -55,9 +55,9 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                 entity.Property(e => e.KullaniciTipi)
                       .HasColumnName("kullanici_tipi")
                       .HasColumnType("ENUM('OGRENCI', 'AKADEMISYEN', 'PERSONEL')")
-                      //.HasConversion<int>()
+                      .HasConversion<string>()
                       .IsRequired()
-                      .HasDefaultValue(KullaniciTipi.OGRENCI);
+                      .HasDefaultValueSql("'OGRENCI'");
 
                 entity.Property(e => e.Ad)
                       .HasColumnName("ad")
@@ -80,7 +80,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.KurumSicilNo)
                       .HasColumnName("kurum_sicil_no")
-                      .HasMaxLength(20);
+                      .HasMaxLength(20)
+                      .IsRequired();
 
                 entity.Property(e => e.ParolaHash)
                       .HasColumnName("parola_hash")
@@ -89,7 +90,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.ParolaTuz)
                       .HasColumnName("parola_tuz")
-                      .HasMaxLength(64);
+                      .HasMaxLength(64)
+                      .IsRequired();
 
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
@@ -132,13 +134,14 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.EpostaTipi)
                       .HasColumnName("eposta_tipi")
-                      .HasColumnType("int")
-                      .HasConversion<int>()
-                      .HasDefaultValue(EpostaTipi.IS);
+                      .HasColumnType("ENUM('KISISEL','IS','DIGER')")
+                      .HasConversion<string>()
+                      .HasDefaultValueSql("'KISISEL'");
 
                 entity.Property(e => e.Oncelikli)
                       .HasColumnName("oncelikli")
-                      .HasDefaultValue(false);
+                      .HasDefaultValue(false)
+                      .IsRequired();
 
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
@@ -186,13 +189,14 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.TelefonTipi)
                       .HasColumnName("telefon_tipi")
-                      .HasColumnType("int")
-                      .HasConversion<int>()
-                      .HasDefaultValue(TelefonTipi.IS);
+                      .HasColumnType("ENUM('CEP','EV','IS','DIGER')")
+                      .HasConversion<string>()
+                      .HasDefaultValueSql("'CEP'");
 
                 entity.Property(e => e.Oncelikli)
                       .HasColumnName("oncelikli")
-                      .HasDefaultValue(false);
+                      .HasDefaultValue(false)
+                      .IsRequired();
 
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
@@ -255,7 +259,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.Oncelikli)
                       .HasColumnName("oncelikli")
-                      .HasDefaultValue(false);
+                      .HasDefaultValue(false)
+                      .IsRequired();
 
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
@@ -300,15 +305,18 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.HaftalikDersSaati)
                       .HasColumnName("haftalik_ders_saati")
-                      .IsRequired();
+                      .IsRequired()
+                      .HasDefaultValue(0);
 
                 entity.Property(e => e.Kredi)
                       .HasColumnName("kredi")
-                      .IsRequired();
+                      .IsRequired()
+                      .HasDefaultValue(0);
 
                 entity.Property(e => e.Akts)
                       .HasColumnName("akts")
-                      .IsRequired();
+                      .IsRequired()
+                      .HasDefaultValue(0);
 
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
@@ -365,9 +373,9 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
             });
 
             // ogrenci_kayitlari
-            modelBuilder.Entity<OgrenciKayit>(entity =>
+            modelBuilder.Entity<OgrenciDersKayit>(entity =>
             {
-                entity.ToTable("ogrenci_kayitlari");
+                entity.ToTable("ogrenci_ders_kayitlari");
                 entity.HasKey(e => e.KayitUuid);
 
                 entity.Property(e => e.KayitUuid)
@@ -393,17 +401,18 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.GuncellemeTarihi)
-      .HasColumnName("guncelleme_tarihi")
-      .HasColumnType("timestamp")
-      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-      .ValueGeneratedOnAddOrUpdate();
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
 
                 // enum Durum default PASIF -> underlying int assumed 0
                 entity.Property(e => e.Durum)
                       .HasColumnName("durum")
-                      .HasColumnType("int")
-                      .HasConversion<int>()
-                      .HasDefaultValue(Durum.PASIF);
+                      .HasColumnType("ENUM('DEVAMEDIYOR','GECTI','KALDI')")
+                      .HasConversion<string>()
+                      .IsRequired()
+                      .HasDefaultValue(Durum.DEVAMEDIYOR);
 
                 entity.HasIndex(e => new { e.OgrenciUuid, e.DersUuid }).IsUnique().HasDatabaseName("UK_Ogrenci_Ders");
                 entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Kullanicilar");
@@ -429,23 +438,27 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.SinavTipi)
                       .HasColumnName("sinav_tipi")
-                      .HasColumnType("int")
-                      .HasConversion<int>()
-                      .IsRequired();
+                      .HasColumnType("ENUM('QUIZ','VIZE','FINAL','PROJE','BUTUNLEME')")
+                      .HasConversion<string>()
+                      .IsRequired()
+                      .HasDefaultValueSql("'QUIZ'");
 
                 entity.Property(e => e.SinavTarih)
                       .HasColumnName("sinav_tarihi")
                       .HasColumnType("date")
-                      .IsRequired();
+                      .IsRequired()
+                      .HasDefaultValueSql("UTC_DATE()");
 
                 entity.Property(e => e.ToplamPuan)
                       .HasColumnName("toplam_puan")
-                      .IsRequired();
+                      .IsRequired()
+                      .HasDefaultValueSql("100");
 
                 entity.Property(e => e.SinavAgirligi)
                       .HasColumnName("sinav_agirligi")
                       .HasColumnType("decimal(5,2)")
-                      .IsRequired();
+                      .IsRequired()
+                      .HasDefaultValueSql("0.00");
 
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
@@ -486,7 +499,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.AlinanPuan)
                       .HasColumnName("alinan_puan")
-                      .IsRequired();
+                      .IsRequired()
+                      .HasDefaultValueSql("0");
 
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")

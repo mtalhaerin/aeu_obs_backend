@@ -5,10 +5,10 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public interface IOgrenciKayitDal : IEntityRepository<OgrenciKayit>
+    public interface IOgrenciDersKayitDal : IEntityRepository<OgrenciDersKayit>
     {
     }
-    public class EFOgrenciKayitDal : EfEntityRepositoryBase<OgrenciKayit, AEUContext>, IOgrenciKayitDal
+    public class EFOgrenciKayitDal : EfEntityRepositoryBase<OgrenciDersKayit, AEUContext>, IOgrenciDersKayitDal
     {
     }
 }
