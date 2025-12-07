@@ -8,7 +8,7 @@ namespace WebAPI.Controllers.Auth
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private required IKullaniciService _kullaniciService;
+        private readonly IKullaniciService _kullaniciService;
 
         public AuthController(
             ILogger<AuthController> logger,
