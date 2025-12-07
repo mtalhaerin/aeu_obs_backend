@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Concrete.EntityFramework.FakulteDal
+namespace DataAccess.Concrete.EntityFramework.FakulteDals
 {
-    public interface IBolumDal : IEntityRepository<Bolum>
+    public interface IAkademisyenBolumAtamaDal : IEntityRepository<AkademisyenBolumAtama>
     {
     }
-    public class EFBolumDal : EfEntityRepositoryBase<Bolum, AEUContext>, IBolumDal
+    public class EFAkademisyenBolumAtamaDal : EfEntityRepositoryBase<AkademisyenBolumAtama, AEUContext>, IAkademisyenBolumAtamaDal
     {
     }
 }

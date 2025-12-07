@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Concrete.EntityFramework.FakulteDal
+namespace DataAccess.Concrete.EntityFramework.FakulteDals
 {
-    public interface IOgrenciBolumKayitDal : IEntityRepository<OgrenciBolumKayit>
+    public interface IBolumDal : IEntityRepository<Bolum>
     {
     }
-    public class EFOgrenciBolumKayitDal : EfEntityRepositoryBase<OgrenciBolumKayit, AEUContext>, IOgrenciBolumKayitDal
+    public class EFBolumDal : EfEntityRepositoryBase<Bolum, AEUContext>, IBolumDal
     {
     }
 }
