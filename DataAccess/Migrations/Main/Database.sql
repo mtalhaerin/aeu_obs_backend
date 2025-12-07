@@ -20,6 +20,70 @@ CREATE TABLE IF NOT EXISTS kullanicilar(
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
+CREATE TABLE IF NOT EXISTS fakulteler(
+    fakulte_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    ad VARCHAR(150) NOT NULL,
+    web_adres VARCHAR(200) NOT NULL,
+    kurulus_tarihi DATE NOT NULL,
+
+    olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)
+
+CREATE TABLE IF NOT EXISTS ana_dallar(
+    ana_dal_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    ad VARCHAR(150) NOT NULL,
+    fakulte_uuid VARCHAR(36) NOT NULL,
+    kurulus_tarihi DATE NOT NULL,
+
+    olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (fakulte_uuid) REFERENCES fakulteler(fakulte_uuid) ON DELETE CASCADE
+)
+
+CREATE TABLE IF NOT EXISTS bolumler(
+    bolum_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    ad VARCHAR(150) NOT NULL,
+    ana_dal_uuid VARCHAR(36) NOT NULL,
+    kurulus_tarihi DATE NOT NULL,
+
+    olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (ana_dal_uuid) REFERENCES ana_dallar(ana_dal_uuid) ON DELETE CASCADE
+)
+
+
+CREATE TABLE IF NOT EXISTS akademisyen_bolum_atamalari(
+    bolum_atama_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    kullanici_uuid VARCHAR(36) NOT NULL,
+    bolum_uuid VARCHAR(36) NOT NULL,
+    kayit_tarihi DATE DEFAULT (UTC_DATE()) NOT NULL,
+
+    olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE,
+    FOREIGN KEY (bolum_uuid) REFERENCES bolumler(bolum_uuid) ON DELETE CASCADE,
+    UNIQUE (kullanici_uuid, bolum_uuid)
+);
+
+CREATE TABLE IF NOT EXISTS ogrenci_bolum_kayitlari(
+    bolum_kayit_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    kullanici_uuid VARCHAR(36) NOT NULL,
+    bolum_uuid VARCHAR(36) NOT NULL,
+    kayit_tarihi DATE DEFAULT (UTC_DATE()) NOT NULL,
+
+    olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE,
+    FOREIGN KEY (bolum_uuid) REFERENCES bolumler(bolum_uuid) ON DELETE CASCADE,
+    UNIQUE (kullanici_uuid, bolum_uuid)
+);
+
 CREATE TABLE IF NOT EXISTS adresler(
 	adres_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     kullanici_uuid VARCHAR(36) NOT NULL,
@@ -132,6 +196,8 @@ CREATE TABLE IF NOT EXISTS notlar(
     UNIQUE (sinav_uuid, ogrenci_uuid)
 
 );
+
+
 
 
 
