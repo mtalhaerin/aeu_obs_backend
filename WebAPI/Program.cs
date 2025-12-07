@@ -2,6 +2,7 @@ using Business.Concrete;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using DataAccess.Concrete.EntityFramework.OzlukDals;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 namespace WebAPI
 {
@@ -27,6 +28,12 @@ namespace WebAPI
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.UseReDoc(c =>
+                {
+                    c.SpecUrl("/openapi/v1.json");
+                    c.RoutePrefix = "redoc"; // ReDoc at /redoc
+                });
+                app.MapScalarApiReference();
             }
 
             app.UseHttpsRedirection();

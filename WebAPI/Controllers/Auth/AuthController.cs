@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using Entities.Concrete.OzlukEntities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers.Auth
@@ -83,7 +84,7 @@ namespace WebAPI.Controllers.Auth
 
         // Kullanıcı profili Güncelleme
         [HttpPost("profile")]
-        public IActionResult UpdateProfile()
+        public IActionResult UpdateProfile([FromBody] Kullanici a, [FromQuery] int b, [FromHeader] int c)
         {
             return Ok();
         }

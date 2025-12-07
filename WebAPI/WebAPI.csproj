@@ -9,12 +9,19 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.11" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
+		<PackageReference Include="Scalar.AspNetCore" Version="2.11.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="10.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Buisness\Business.csproj" />
 		<ProjectReference Include="..\Core\Core.csproj" />
 		<ProjectReference Include="..\Entities\Entities.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Controllers\Fakulte\" />
+	  <Folder Include="Controllers\Ozluk\" />
 	</ItemGroup>
 
 </Project>
