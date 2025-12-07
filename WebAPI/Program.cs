@@ -17,18 +17,6 @@ namespace WebAPI
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
-            #region Database Configuration
-            // 1. Connection String'i appsettings.json dosyasindan oku
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-            // 2. DbContext servisini kaydet ve MySQL ayarlarini burada yap
-            builder.Services.AddDbContext<AEUContext>(options =>
-            {
-                options.UseMySql(connectionString,
-                    new MySqlServerVersion(new Version(8, 0, 44)));
-            });
-            #endregion
-
             // Register application services
             builder.Services.AddScoped<IKullaniciService, KullaniciManager>();
             builder.Services.AddScoped<IKullaniciDal, EFKullaniciDal>();

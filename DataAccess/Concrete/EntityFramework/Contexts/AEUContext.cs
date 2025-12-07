@@ -3,6 +3,7 @@ using Entities.Concrete.FakulteEntities;
 using Entities.Concrete.OzlukEntities;
 using Entities.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace DataAccess.Concrete.EntityFramework.Contexts
@@ -43,7 +44,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Bos birakildi, cunku konfigurasyon Program.cs tarafinda yapiliyor.
+            optionsBuilder.UseMySql("server=localhost;database=aeu_obs;user=root;password=1967",
+                    new MySqlServerVersion(new Version(8, 0, 44)));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
