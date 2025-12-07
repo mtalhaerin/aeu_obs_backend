@@ -3,6 +3,7 @@ using DataAccess.Concrete.EntityFramework.Contexts;
 using DataAccess.Concrete.EntityFramework.OzlukDals;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using System.Diagnostics;
 
 namespace WebAPI
 {
@@ -16,14 +17,27 @@ namespace WebAPI
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
-            // Register DbContext (AEUContext has OnConfiguring, but register anyway)
-            //builder.Services.AddDbContext<AEUContext>(options => { /* optional configuration */ });
+            #region Database Configuration
+            // 1. Connection String'i appsettings.json dosyasindan oku
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-            // Register application services so DI can resolve IKullaniciService and IKullaniciDal
+            // 2. DbContext servisini kaydet ve MySQL ayarlarini burada yap
+            builder.Services.AddDbContext<AEUContext>(options =>
+            {
+                options.UseMySql(connectionString,
+                    new MySqlServerVersion(new Version(8, 0, 44)));
+            });
+            #endregion
+
+            // Register application services
             builder.Services.AddScoped<IKullaniciService, KullaniciManager>();
             builder.Services.AddScoped<IKullaniciDal, EFKullaniciDal>();
 
             var app = builder.Build();
+
+            // Read host and port from appsettings.json
+            var host = builder.Configuration["HostSettings:Host"] ?? "localhost";
+            var port = builder.Configuration["HostSettings:Port"] ?? "5249";
 
             if (app.Environment.IsDevelopment())
             {
@@ -33,13 +47,21 @@ namespace WebAPI
                     c.SpecUrl("/openapi/v1.json");
                     c.RoutePrefix = "redoc"; // ReDoc at /redoc
                 });
-                app.MapScalarApiReference();
+                app.MapScalarApiReference(); // Ensure Scalar API is mapped
+
+                // Open the browser to the desired URL
+                var url = $"http://{host}:{port}/scalar/";
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
             }
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-            app.Run();
+            app.Run($"http://{host}:{port}");
         }
     }
 }

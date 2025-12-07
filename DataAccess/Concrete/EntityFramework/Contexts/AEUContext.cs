@@ -9,41 +9,166 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 {
     public class AEUContext : DbContext
     {
-        //public AEUContext(DbContextOptions<AEUContext> options)
-        //: base(options)
-        //{
-        //}
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public AEUContext() : base()
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseMySql("server=localhost;database=aeu_obs;user=root;password=1967",
-                    new MySqlServerVersion(new Version(8, 0, 44)));
-            }
-            }
+
+        }
+        public AEUContext(DbContextOptions<AEUContext> options) : base(options)
+        {
+        }
 
         // Entity Database tablo eşleltirme 
+        #region Ozluk Entity'leri
         public DbSet<Adres> Adresler { get; set; }
-        public DbSet<AkademisyenDersAtama> AkademisyenDersAtamalari { get; set; }
-        public DbSet<Ders> Dersler { get; set; }
         public DbSet<Eposta> Epostalar { get; set; }
         public DbSet<Kullanici> Kullanicilar { get; set; }
-        public DbSet<Not> Notlar { get; set; }
-        public DbSet<OgrenciDersKayit> OgrenciDersKayitlari { get; set; }
-        public DbSet<Sinav> Sinavlar { get; set; }
         public DbSet<Telefon> Telefonlar { get; set; }
+        #endregion
 
+        #region Fakulte Entity'leri
         public DbSet<Fakulte> Fakulteler { get; set; }
         public DbSet<AnaDal> AnaDallar { get; set; }
         public DbSet<Bolum> Bolumler { get; set; }
         public DbSet<AkademisyenBolumAtama> AkademisyenBolumAtamalari { get; set; }
         public DbSet<OgrenciBolumKayit> OgrenciBolumKayitlari { get; set; }
+        #endregion
 
+        #region Ders Entity'leri
+        public DbSet<AkademisyenDersAtama> AkademisyenDersAtamalari { get; set; }
+        public DbSet<Ders> Dersler { get; set; }
+        public DbSet<Not> Notlar { get; set; }
+        public DbSet<OgrenciDersKayit> OgrenciDersKayitlari { get; set; }
+        public DbSet<Sinav> Sinavlar { get; set; }
+        #endregion
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Bos birakildi, cunku konfigurasyon Program.cs tarafinda yapiliyor.
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            ConfigureOzlukEntities(modelBuilder);
+            ConfigureFakulteEntities(modelBuilder);
+            ConfigureDersEntities(modelBuilder);
+
+        }
+
+        private void ConfigureOzlukEntities(ModelBuilder modelBuilder)
+        {
+            // adresler
+            modelBuilder.Entity<Adres>(entity =>
+            {
+                entity.ToTable("adresler");
+                entity.HasKey(e => e.AdresUuid);
+
+                entity.Property(e => e.AdresUuid)
+                      .HasColumnName("adres_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.KullaniciUuid)
+                      .HasColumnName("kullanici_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.Sokak)
+                      .HasColumnName("sokak")
+                      .HasMaxLength(100)
+                      .IsRequired();
+
+                entity.Property(e => e.Sehir)
+                      .HasColumnName("sehir")
+                      .HasMaxLength(50)
+                      .IsRequired();
+
+                entity.Property(e => e.Ilce)
+                      .HasColumnName("ilce")
+                      .HasMaxLength(50)
+                      .IsRequired();
+
+                entity.Property(e => e.PostaKodu)
+                      .HasColumnName("posta_kodu")
+                      .HasMaxLength(10)
+                      .IsRequired();
+
+                entity.Property(e => e.Ulke)
+                      .HasColumnName("ulke")
+                      .HasMaxLength(50)
+                      .IsRequired();
+
+                entity.Property(e => e.Oncelikli)
+                      .HasColumnName("oncelikli")
+                      .HasDefaultValue(false)
+                      .IsRequired();
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliAdres");
+                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Adresler_Kullanicilar");
+            });
+
+            // epostalar
+            modelBuilder.Entity<Eposta>(entity =>
+            {
+                entity.ToTable("epostalar");
+                entity.HasKey(e => e.EpostaUuid);
+
+                entity.Property(e => e.EpostaUuid)
+                      .HasColumnName("eposta_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.KullaniciUuid)
+                      .HasColumnName("kullanici_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.EpostaAdresi)
+                      .HasColumnName("eposta_adresi")
+                      .HasMaxLength(100)
+                      .IsRequired();
+
+                entity.Property(e => e.EpostaTipi)
+                      .HasColumnName("eposta_tipi")
+                      .HasColumnType("ENUM('KISISEL','IS','DIGER')")
+                      .HasConversion<string>()
+                      .HasDefaultValueSql("'KISISEL'");
+
+                entity.Property(e => e.Oncelikli)
+                      .HasColumnName("oncelikli")
+                      .HasDefaultValue(false)
+                      .IsRequired();
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                entity.HasIndex(e => e.EpostaAdresi).IsUnique().HasDatabaseName("UK_Epostalar_EpostaAdresi");
+                entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliEposta");
+                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Epostalar_Kullanicilar");
+            });
 
             // kullanicilar
             modelBuilder.Entity<Kullanici>(entity =>
@@ -119,56 +244,6 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                 entity.HasIndex(e => e.KurumSicilNo).IsUnique().HasDatabaseName("UK_Kullanicilar_KurumSicilNo");
             });
 
-            // epostalar
-            modelBuilder.Entity<Eposta>(entity =>
-            {
-                entity.ToTable("epostalar");
-                entity.HasKey(e => e.EpostaUuid);
-
-                entity.Property(e => e.EpostaUuid)
-                      .HasColumnName("eposta_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired()
-                      .HasDefaultValueSql("UUID()");
-
-                entity.Property(e => e.KullaniciUuid)
-                      .HasColumnName("kullanici_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.EpostaAdresi)
-                      .HasColumnName("eposta_adresi")
-                      .HasMaxLength(100)
-                      .IsRequired();
-
-                entity.Property(e => e.EpostaTipi)
-                      .HasColumnName("eposta_tipi")
-                      .HasColumnType("ENUM('KISISEL','IS','DIGER')")
-                      .HasConversion<string>()
-                      .HasDefaultValueSql("'KISISEL'");
-
-                entity.Property(e => e.Oncelikli)
-                      .HasColumnName("oncelikli")
-                      .HasDefaultValue(false)
-                      .IsRequired();
-
-                entity.Property(e => e.OlusturmaTarihi)
-                      .HasColumnName("olusturma_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.GuncellemeTarihi)
-                      .HasColumnName("guncelleme_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAddOrUpdate();
-
-                entity.HasIndex(e => e.EpostaAdresi).IsUnique().HasDatabaseName("UK_Epostalar_EpostaAdresi");
-                entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliEposta");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Epostalar_Kullanicilar");
-            });
-
             // telefonlar
             modelBuilder.Entity<Telefon>(entity =>
             {
@@ -224,310 +299,9 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                 entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Telefonlar_Kullanicilar");
             });
 
-            // adresler
-            modelBuilder.Entity<Adres>(entity =>
-            {
-                entity.ToTable("adresler");
-                entity.HasKey(e => e.AdresUuid);
-
-                entity.Property(e => e.AdresUuid)
-                      .HasColumnName("adres_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired()
-                      .HasDefaultValueSql("UUID()");
-
-                entity.Property(e => e.KullaniciUuid)
-                      .HasColumnName("kullanici_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.Sokak)
-                      .HasColumnName("sokak")
-                      .HasMaxLength(100)
-                      .IsRequired();
-
-                entity.Property(e => e.Sehir)
-                      .HasColumnName("sehir")
-                      .HasMaxLength(50)
-                      .IsRequired();
-
-                entity.Property(e => e.Ilce)
-                      .HasColumnName("ilce")
-                      .HasMaxLength(50)
-                      .IsRequired();
-
-                entity.Property(e => e.PostaKodu)
-                      .HasColumnName("posta_kodu")
-                      .HasMaxLength(10)
-                      .IsRequired();
-
-                entity.Property(e => e.Ulke)
-                      .HasColumnName("ulke")
-                      .HasMaxLength(50)
-                      .IsRequired();
-
-                entity.Property(e => e.Oncelikli)
-                      .HasColumnName("oncelikli")
-                      .HasDefaultValue(false)
-                      .IsRequired();
-
-                entity.Property(e => e.OlusturmaTarihi)
-                      .HasColumnName("olusturma_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.GuncellemeTarihi)
-                      .HasColumnName("guncelleme_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAddOrUpdate();
-
-                entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliAdres");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Adresler_Kullanicilar");
-            });
-
-            // dersler
-            modelBuilder.Entity<Ders>(entity =>
-            {
-                entity.ToTable("dersler");
-                entity.HasKey(e => e.DersUuid);
-
-                entity.Property(e => e.DersUuid)
-                      .HasColumnName("ders_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired()
-                      .HasDefaultValueSql("UUID()");
-
-                entity.Property(e => e.DersKodu)
-                      .HasColumnName("ders_kodu")
-                      .HasMaxLength(20)
-                      .IsRequired();
-
-                entity.Property(e => e.DersAdi)
-                      .HasColumnName("ders_adi")
-                      .HasMaxLength(100)
-                      .IsRequired();
-
-                entity.Property(e => e.Aciklama)
-                      .HasColumnName("aciklama");
-
-                entity.Property(e => e.HaftalikDersSaati)
-                      .HasColumnName("haftalik_ders_saati")
-                      .IsRequired()
-                      .HasDefaultValue(0);
-
-                entity.Property(e => e.Kredi)
-                      .HasColumnName("kredi")
-                      .IsRequired()
-                      .HasDefaultValue(0);
-
-                entity.Property(e => e.Akts)
-                      .HasColumnName("akts")
-                      .IsRequired()
-                      .HasDefaultValue(0);
-
-                entity.Property(e => e.OlusturmaTarihi)
-                      .HasColumnName("olusturma_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.GuncellemeTarihi)
-                      .HasColumnName("guncelleme_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAddOrUpdate();
-
-                entity.HasIndex(e => e.DersKodu).IsUnique().HasDatabaseName("UK_Dersler_DersKodu");
-            });
-
-            // akademisyen_ders_atamalari
-            modelBuilder.Entity<AkademisyenDersAtama>(entity =>
-            {
-                entity.ToTable("akademisyen_ders_atamalari");
-                entity.HasKey(e => e.AtamaUuid);
-
-                entity.Property(e => e.AtamaUuid)
-                      .HasColumnName("atama_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired()
-                      .HasDefaultValueSql("UUID()");
-
-                entity.Property(e => e.AkademisyenUuid)
-                      .HasColumnName("akademisyen_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.DersUuid)
-                      .HasColumnName("ders_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.OlusturmaTarihi)
-                      .HasColumnName("olusturma_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.GuncellemeTarihi)
-                      .HasColumnName("guncelleme_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAddOrUpdate();
-
-                entity.HasIndex(e => new { e.AkademisyenUuid, e.DersUuid }).IsUnique().HasDatabaseName("UK_Akademisyen_Ders");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.AkademisyenUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Kullanicilar");
-                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Dersler");
-            });
-
-            // ogrenci_kayitlari
-            modelBuilder.Entity<OgrenciDersKayit>(entity =>
-            {
-                entity.ToTable("ogrenci_ders_kayitlari");
-                entity.HasKey(e => e.KayitUuid);
-
-                entity.Property(e => e.KayitUuid)
-                      .HasColumnName("kayit_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired()
-                      .HasDefaultValueSql("UUID()");
-
-                entity.Property(e => e.OgrenciUuid)
-                      .HasColumnName("ogrenci_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.DersUuid)
-                      .HasColumnName("ders_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.OlusturmaTarihi)
-                      .HasColumnName("olusturma_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.GuncellemeTarihi)
-                      .HasColumnName("guncelleme_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAddOrUpdate();
-
-                // enum Durum default PASIF -> underlying int assumed 0
-                entity.Property(e => e.Durum)
-                      .HasColumnName("durum")
-                      .HasColumnType("ENUM('DEVAMEDIYOR','GECTI','KALDI')")
-                      .HasConversion<string>()
-                      .IsRequired()
-                      .HasDefaultValue(Durum.DEVAMEDIYOR);
-
-                entity.HasIndex(e => new { e.OgrenciUuid, e.DersUuid }).IsUnique().HasDatabaseName("UK_Ogrenci_Ders");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Kullanicilar");
-                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Dersler");
-            });
-
-            // sinavlar
-            modelBuilder.Entity<Sinav>(entity =>
-            {
-                entity.ToTable("sinavlar");
-                entity.HasKey(e => e.SinavUuid);
-
-                entity.Property(e => e.SinavUuid)
-                      .HasColumnName("sinav_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired()
-                      .HasDefaultValueSql("UUID()");
-
-                entity.Property(e => e.DersUuid)
-                      .HasColumnName("ders_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.SinavTipi)
-                      .HasColumnName("sinav_tipi")
-                      .HasColumnType("ENUM('QUIZ','VIZE','FINAL','PROJE','BUTUNLEME')")
-                      .HasConversion<string>()
-                      .IsRequired()
-                      .HasDefaultValueSql("'QUIZ'");
-
-                entity.Property(e => e.SinavTarih)
-                      .HasColumnName("sinav_tarihi")
-                      .HasColumnType("date")
-                      .IsRequired()
-                      .HasDefaultValueSql("UTC_DATE()");
-
-                entity.Property(e => e.ToplamPuan)
-                      .HasColumnName("toplam_puan")
-                      .IsRequired()
-                      .HasDefaultValueSql("100");
-
-                entity.Property(e => e.SinavAgirligi)
-                      .HasColumnName("sinav_agirligi")
-                      .HasColumnType("decimal(5,2)")
-                      .IsRequired()
-                      .HasDefaultValueSql("0.00");
-
-                entity.Property(e => e.OlusturmaTarihi)
-                      .HasColumnName("olusturma_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.GuncellemeTarihi)
-                      .HasColumnName("guncelleme_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAddOrUpdate();
-
-                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Sinavlar_Dersler");
-            });
-
-            // notlar
-            modelBuilder.Entity<Not>(entity =>
-            {
-                entity.ToTable("notlar");
-                entity.HasKey(e => e.NotUuid);
-
-                entity.Property(e => e.NotUuid)
-                      .HasColumnName("not_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired()
-                      .HasDefaultValueSql("UUID()");
-
-                entity.Property(e => e.SinavUuid)
-                      .HasColumnName("sinav_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.OgrenciUuid)
-                      .HasColumnName("ogrenci_uuid")
-                      .HasMaxLength(36)
-                      .IsRequired();
-
-                entity.Property(e => e.AlinanPuan)
-                      .HasColumnName("alinan_puan")
-                      .IsRequired()
-                      .HasDefaultValueSql("0");
-
-                entity.Property(e => e.OlusturmaTarihi)
-                      .HasColumnName("olusturma_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.GuncellemeTarihi)
-                      .HasColumnName("guncelleme_tarihi")
-                      .HasColumnType("timestamp")
-                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                      .ValueGeneratedOnAddOrUpdate();
-
-                entity.HasIndex(e => new { e.SinavUuid, e.OgrenciUuid }).IsUnique().HasDatabaseName("UK_Notlar_Sinav_Ogrenci");
-                entity.HasOne<Sinav>().WithMany().HasForeignKey(e => e.SinavUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Sinavlar");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Kullanicilar");
-            });
-
+        }
+        private void ConfigureFakulteEntities(ModelBuilder modelBuilder)
+        {
             // fakulteler
             modelBuilder.Entity<Fakulte>(entity =>
             {
@@ -730,5 +504,249 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                 entity.HasOne<Bolum>().WithMany().HasForeignKey(e => e.BolumUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciBolumKayit_Bolumler");
             });
         }
+        private void ConfigureDersEntities(ModelBuilder modelBuilder)
+        {
+            // akademisyen_ders_atamalari
+            modelBuilder.Entity<AkademisyenDersAtama>(entity =>
+            {
+                entity.ToTable("akademisyen_ders_atamalari");
+                entity.HasKey(e => e.AtamaUuid);
+
+                entity.Property(e => e.AtamaUuid)
+                      .HasColumnName("atama_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.AkademisyenUuid)
+                      .HasColumnName("akademisyen_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.DersUuid)
+                      .HasColumnName("ders_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                entity.HasIndex(e => new { e.AkademisyenUuid, e.DersUuid }).IsUnique().HasDatabaseName("UK_Akademisyen_Ders");
+                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.AkademisyenUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Kullanicilar");
+                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Dersler");
+            });
+
+            // dersler
+            modelBuilder.Entity<Ders>(entity =>
+            {
+                entity.ToTable("dersler");
+                entity.HasKey(e => e.DersUuid);
+
+                entity.Property(e => e.DersUuid)
+                      .HasColumnName("ders_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.DersKodu)
+                      .HasColumnName("ders_kodu")
+                      .HasMaxLength(20)
+                      .IsRequired();
+
+                entity.Property(e => e.DersAdi)
+                      .HasColumnName("ders_adi")
+                      .HasMaxLength(100)
+                      .IsRequired();
+
+                entity.Property(e => e.Aciklama)
+                      .HasColumnName("aciklama");
+
+                entity.Property(e => e.HaftalikDersSaati)
+                      .HasColumnName("haftalik_ders_saati")
+                      .IsRequired()
+                      .HasDefaultValue(0);
+
+                entity.Property(e => e.Kredi)
+                      .HasColumnName("kredi")
+                      .IsRequired()
+                      .HasDefaultValue(0);
+
+                entity.Property(e => e.Akts)
+                      .HasColumnName("akts")
+                      .IsRequired()
+                      .HasDefaultValue(0);
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                entity.HasIndex(e => e.DersKodu).IsUnique().HasDatabaseName("UK_Dersler_DersKodu");
+            });
+
+            // notlar
+            modelBuilder.Entity<Not>(entity =>
+            {
+                entity.ToTable("notlar");
+                entity.HasKey(e => e.NotUuid);
+
+                entity.Property(e => e.NotUuid)
+                      .HasColumnName("not_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.SinavUuid)
+                      .HasColumnName("sinav_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.OgrenciUuid)
+                      .HasColumnName("ogrenci_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.AlinanPuan)
+                      .HasColumnName("alinan_puan")
+                      .IsRequired()
+                      .HasDefaultValueSql("0");
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                entity.HasIndex(e => new { e.SinavUuid, e.OgrenciUuid }).IsUnique().HasDatabaseName("UK_Notlar_Sinav_Ogrenci");
+                entity.HasOne<Sinav>().WithMany().HasForeignKey(e => e.SinavUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Sinavlar");
+                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Kullanicilar");
+            });
+
+            // ogrenci_kayitlari
+            modelBuilder.Entity<OgrenciDersKayit>(entity =>
+            {
+                entity.ToTable("ogrenci_ders_kayitlari");
+                entity.HasKey(e => e.KayitUuid);
+
+                entity.Property(e => e.KayitUuid)
+                      .HasColumnName("kayit_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.OgrenciUuid)
+                      .HasColumnName("ogrenci_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.DersUuid)
+                      .HasColumnName("ders_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                // enum Durum default PASIF -> underlying int assumed 0
+                entity.Property(e => e.Durum)
+                      .HasColumnName("durum")
+                      .HasColumnType("ENUM('DEVAMEDIYOR','GECTI','KALDI')")
+                      .HasConversion<string>()
+                      .IsRequired()
+                      .HasDefaultValue(Durum.DEVAMEDIYOR);
+
+                entity.HasIndex(e => new { e.OgrenciUuid, e.DersUuid }).IsUnique().HasDatabaseName("UK_Ogrenci_Ders");
+                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Kullanicilar");
+                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Dersler");
+            });
+
+            // sinavlar
+            modelBuilder.Entity<Sinav>(entity =>
+            {
+                entity.ToTable("sinavlar");
+                entity.HasKey(e => e.SinavUuid);
+
+                entity.Property(e => e.SinavUuid)
+                      .HasColumnName("sinav_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.DersUuid)
+                      .HasColumnName("ders_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.SinavTipi)
+                      .HasColumnName("sinav_tipi")
+                      .HasColumnType("ENUM('QUIZ','VIZE','FINAL','PROJE','BUTUNLEME')")
+                      .HasConversion<string>()
+                      .IsRequired()
+                      .HasDefaultValueSql("'QUIZ'");
+
+                entity.Property(e => e.SinavTarih)
+                      .HasColumnName("sinav_tarihi")
+                      .HasColumnType("date")
+                      .IsRequired()
+                      .HasDefaultValueSql("UTC_DATE()");
+
+                entity.Property(e => e.ToplamPuan)
+                      .HasColumnName("toplam_puan")
+                      .IsRequired()
+                      .HasDefaultValueSql("100");
+
+                entity.Property(e => e.SinavAgirligi)
+                      .HasColumnName("sinav_agirligi")
+                      .HasColumnType("decimal(5,2)")
+                      .IsRequired()
+                      .HasDefaultValueSql("0.00");
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Sinavlar_Dersler");
+            });
+        }
+
     }
 }

@@ -8,7 +8,7 @@ namespace DataAccess.Concrete.EntityFramework.DersDals
     public interface IOgrenciDersKayitDal : IEntityRepository<OgrenciDersKayit>
     {
     }
-    public class EFOgrenciKayitDal : EfEntityRepositoryBase<OgrenciDersKayit, AEUContext>, IOgrenciDersKayitDal
+    public class EFOgrenciDersKayitDal : EfEntityRepositoryBase<OgrenciDersKayit, AEUContext>, IOgrenciDersKayitDal
     {
     }
 }
