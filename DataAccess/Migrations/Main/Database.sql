@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS kullanicilar(
 
 CREATE TABLE IF NOT EXISTS fakulteler(
     fakulte_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    ad VARCHAR(150) NOT NULL,
+    fakulte_ad VARCHAR(150) NOT NULL,
     web_adres VARCHAR(200) NOT NULL,
     kurulus_tarihi DATE NOT NULL,
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS fakulteler(
 
 CREATE TABLE IF NOT EXISTS ana_dallar(
     ana_dal_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    ad VARCHAR(150) NOT NULL,
+    ana_dal_ad VARCHAR(150) NOT NULL,
     fakulte_uuid VARCHAR(36) NOT NULL,
     kurulus_tarihi DATE NOT NULL,
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS ana_dallar(
 
 CREATE TABLE IF NOT EXISTS bolumler(
     bolum_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    ad VARCHAR(150) NOT NULL,
+    bolum_ad VARCHAR(150) NOT NULL,
     ana_dal_uuid VARCHAR(36) NOT NULL,
     kurulus_tarihi DATE NOT NULL,
 
