@@ -60,7 +60,6 @@ CREATE TABLE IF NOT EXISTS akademisyen_bolum_atamalari(
     bolum_atama_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     kullanici_uuid VARCHAR(36) NOT NULL,
     bolum_uuid VARCHAR(36) NOT NULL,
-    kayit_tarihi DATE DEFAULT (UTC_DATE()) NOT NULL,
 
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -74,7 +73,6 @@ CREATE TABLE IF NOT EXISTS ogrenci_bolum_kayitlari(
     bolum_kayit_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     kullanici_uuid VARCHAR(36) NOT NULL,
     bolum_uuid VARCHAR(36) NOT NULL,
-    kayit_tarihi DATE DEFAULT (UTC_DATE()) NOT NULL,
 
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
