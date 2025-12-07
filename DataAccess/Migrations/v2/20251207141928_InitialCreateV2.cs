@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DataAccess.Migrations.v1
+namespace DataAccess.Migrations.v2
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreateV2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,26 @@ namespace DataAccess.Migrations.v1
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_dersler", x => x.ders_uuid);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "fakulteler",
+                columns: table => new
+                {
+                    fakulte_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, defaultValueSql: "UUID()", collation: "ascii_general_ci"),
+                    fakulte_ad = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    web_adres = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    kurulus_tarihi = table.Column<DateTime>(type: "date", nullable: false),
+                    olusturma_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    guncelleme_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_fakulteler", x => x.fakulte_uuid);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -101,6 +121,37 @@ namespace DataAccess.Migrations.v1
                         column: x => x.DersUuid1,
                         principalTable: "dersler",
                         principalColumn: "ders_uuid");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ana_dallar",
+                columns: table => new
+                {
+                    ana_dal_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, defaultValueSql: "UUID()", collation: "ascii_general_ci"),
+                    ana_dal_ad = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    fakulte_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, collation: "ascii_general_ci"),
+                    kurulus_tarihi = table.Column<DateTime>(type: "date", nullable: false),
+                    olusturma_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    guncelleme_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    FakulteUuid1 = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ana_dallar", x => x.ana_dal_uuid);
+                    table.ForeignKey(
+                        name: "FK_AnaDallar_Fakulteler",
+                        column: x => x.fakulte_uuid,
+                        principalTable: "fakulteler",
+                        principalColumn: "fakulte_uuid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ana_dallar_fakulteler_FakulteUuid1",
+                        column: x => x.FakulteUuid1,
+                        principalTable: "fakulteler",
+                        principalColumn: "fakulte_uuid");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -337,6 +388,119 @@ namespace DataAccess.Migrations.v1
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "bolumler",
+                columns: table => new
+                {
+                    bolum_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, defaultValueSql: "UUID()", collation: "ascii_general_ci"),
+                    bolum_ad = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ana_dal_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, collation: "ascii_general_ci"),
+                    kurulus_tarihi = table.Column<DateTime>(type: "date", nullable: false),
+                    olusturma_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    guncelleme_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    AnaDalUuid1 = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_bolumler", x => x.bolum_uuid);
+                    table.ForeignKey(
+                        name: "FK_Bolumler_AnaDallar",
+                        column: x => x.ana_dal_uuid,
+                        principalTable: "ana_dallar",
+                        principalColumn: "ana_dal_uuid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_bolumler_ana_dallar_AnaDalUuid1",
+                        column: x => x.AnaDalUuid1,
+                        principalTable: "ana_dallar",
+                        principalColumn: "ana_dal_uuid");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "akademisyen_bolum_atamalari",
+                columns: table => new
+                {
+                    bolum_atama_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, defaultValueSql: "UUID()", collation: "ascii_general_ci"),
+                    kullanici_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, collation: "ascii_general_ci"),
+                    bolum_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, collation: "ascii_general_ci"),
+                    olusturma_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    guncelleme_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    AkademisyenKullaniciUuid = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    BolumUuid1 = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_akademisyen_bolum_atamalari", x => x.bolum_atama_uuid);
+                    table.ForeignKey(
+                        name: "FK_AkademisyenBolumAtama_Bolumler",
+                        column: x => x.bolum_uuid,
+                        principalTable: "bolumler",
+                        principalColumn: "bolum_uuid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AkademisyenBolumAtama_Kullanicilar",
+                        column: x => x.kullanici_uuid,
+                        principalTable: "kullanicilar",
+                        principalColumn: "kullanici_uuid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_akademisyen_bolum_atamalari_bolumler_BolumUuid1",
+                        column: x => x.BolumUuid1,
+                        principalTable: "bolumler",
+                        principalColumn: "bolum_uuid");
+                    table.ForeignKey(
+                        name: "FK_akademisyen_bolum_atamalari_kullanicilar_AkademisyenKullanic~",
+                        column: x => x.AkademisyenKullaniciUuid,
+                        principalTable: "kullanicilar",
+                        principalColumn: "kullanici_uuid");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ogrenci_bolum_kayitlari",
+                columns: table => new
+                {
+                    bolum_kayit_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, defaultValueSql: "UUID()", collation: "ascii_general_ci"),
+                    kullanici_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, collation: "ascii_general_ci"),
+                    bolum_uuid = table.Column<Guid>(type: "char(36)", maxLength: 36, nullable: false, collation: "ascii_general_ci"),
+                    olusturma_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    guncelleme_tarihi = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    OgrenciKullaniciUuid = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    BolumUuid1 = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ogrenci_bolum_kayitlari", x => x.bolum_kayit_uuid);
+                    table.ForeignKey(
+                        name: "FK_OgrenciBolumKayit_Bolumler",
+                        column: x => x.bolum_uuid,
+                        principalTable: "bolumler",
+                        principalColumn: "bolum_uuid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OgrenciBolumKayit_Kullanicilar",
+                        column: x => x.kullanici_uuid,
+                        principalTable: "kullanicilar",
+                        principalColumn: "kullanici_uuid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ogrenci_bolum_kayitlari_bolumler_BolumUuid1",
+                        column: x => x.BolumUuid1,
+                        principalTable: "bolumler",
+                        principalColumn: "bolum_uuid");
+                    table.ForeignKey(
+                        name: "FK_ogrenci_bolum_kayitlari_kullanicilar_OgrenciKullaniciUuid",
+                        column: x => x.OgrenciKullaniciUuid,
+                        principalTable: "kullanicilar",
+                        principalColumn: "kullanici_uuid");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_adresler_KullaniciUuid1",
                 table: "adresler",
@@ -346,6 +510,27 @@ namespace DataAccess.Migrations.v1
                 name: "UK_OncelikliAdres",
                 table: "adresler",
                 columns: new[] { "kullanici_uuid", "oncelikli" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_akademisyen_bolum_atamalari_AkademisyenKullaniciUuid",
+                table: "akademisyen_bolum_atamalari",
+                column: "AkademisyenKullaniciUuid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_akademisyen_bolum_atamalari_bolum_uuid",
+                table: "akademisyen_bolum_atamalari",
+                column: "bolum_uuid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_akademisyen_bolum_atamalari_BolumUuid1",
+                table: "akademisyen_bolum_atamalari",
+                column: "BolumUuid1");
+
+            migrationBuilder.CreateIndex(
+                name: "UK_AkademisyenBolumAtama_Kullanici_Bolum",
+                table: "akademisyen_bolum_atamalari",
+                columns: new[] { "kullanici_uuid", "bolum_uuid" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -368,6 +553,26 @@ namespace DataAccess.Migrations.v1
                 table: "akademisyen_ders_atamalari",
                 columns: new[] { "akademisyen_uuid", "ders_uuid" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ana_dallar_fakulte_uuid",
+                table: "ana_dallar",
+                column: "fakulte_uuid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ana_dallar_FakulteUuid1",
+                table: "ana_dallar",
+                column: "FakulteUuid1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_bolumler_ana_dal_uuid",
+                table: "bolumler",
+                column: "ana_dal_uuid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_bolumler_AnaDalUuid1",
+                table: "bolumler",
+                column: "AnaDalUuid1");
 
             migrationBuilder.CreateIndex(
                 name: "UK_Dersler_DersKodu",
@@ -426,6 +631,27 @@ namespace DataAccess.Migrations.v1
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ogrenci_bolum_kayitlari_bolum_uuid",
+                table: "ogrenci_bolum_kayitlari",
+                column: "bolum_uuid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ogrenci_bolum_kayitlari_BolumUuid1",
+                table: "ogrenci_bolum_kayitlari",
+                column: "BolumUuid1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ogrenci_bolum_kayitlari_OgrenciKullaniciUuid",
+                table: "ogrenci_bolum_kayitlari",
+                column: "OgrenciKullaniciUuid");
+
+            migrationBuilder.CreateIndex(
+                name: "UK_OgrenciBolumKayit_Kullanici_Bolum",
+                table: "ogrenci_bolum_kayitlari",
+                columns: new[] { "kullanici_uuid", "bolum_uuid" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ogrenci_ders_kayitlari_ders_uuid",
                 table: "ogrenci_ders_kayitlari",
                 column: "ders_uuid");
@@ -481,6 +707,9 @@ namespace DataAccess.Migrations.v1
                 name: "adresler");
 
             migrationBuilder.DropTable(
+                name: "akademisyen_bolum_atamalari");
+
+            migrationBuilder.DropTable(
                 name: "akademisyen_ders_atamalari");
 
             migrationBuilder.DropTable(
@@ -488,6 +717,9 @@ namespace DataAccess.Migrations.v1
 
             migrationBuilder.DropTable(
                 name: "notlar");
+
+            migrationBuilder.DropTable(
+                name: "ogrenci_bolum_kayitlari");
 
             migrationBuilder.DropTable(
                 name: "ogrenci_ders_kayitlari");
@@ -499,10 +731,19 @@ namespace DataAccess.Migrations.v1
                 name: "sinavlar");
 
             migrationBuilder.DropTable(
+                name: "bolumler");
+
+            migrationBuilder.DropTable(
                 name: "kullanicilar");
 
             migrationBuilder.DropTable(
                 name: "dersler");
+
+            migrationBuilder.DropTable(
+                name: "ana_dallar");
+
+            migrationBuilder.DropTable(
+                name: "fakulteler");
         }
     }
 }

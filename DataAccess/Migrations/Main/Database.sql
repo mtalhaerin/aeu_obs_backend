@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS fakulteler(
 
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)
+);
 
 CREATE TABLE IF NOT EXISTS ana_dallar(
     ana_dal_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS ana_dallar(
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (fakulte_uuid) REFERENCES fakulteler(fakulte_uuid) ON DELETE CASCADE
-)
+);
 
 CREATE TABLE IF NOT EXISTS bolumler(
     bolum_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS bolumler(
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (ana_dal_uuid) REFERENCES ana_dallar(ana_dal_uuid) ON DELETE CASCADE
-)
+);
 
 
 CREATE TABLE IF NOT EXISTS akademisyen_bolum_atamalari(
@@ -300,3 +300,74 @@ FROM notlar n
 JOIN sinavlar s ON n.sinav_uuid = s.sinav_uuid
 JOIN dersler d ON s.ders_uuid = d.ders_uuid
 JOIN kullanicilar k ON n.ogrenci_uuid = k.kullanici_uuid;
+
+-- Yeni dummy veriler ekleniyor
+
+-- Yeni Kullanıcılar
+INSERT INTO kullanicilar (kullanici_uuid, kullanici_tipi, ad, soyad, kurum_eposta, kurum_sicil_no, parola_hash, parola_tuz)
+VALUES 
+    ('11111111-d1cc-11f0-9e59-2e6112e38707', 'OGRENCI', 'Zeynep', 'Kara', 'zeynep.kara@ahievran.edu.tr', '2020004', 'hashghi', 'saltghi'),
+    ('22222222-d1cc-11f0-9e59-2e6112e38707', 'OGRENCI', 'Emre', 'Şahin', 'emre.sahin@ahievran.edu.tr', '2020005', 'hashjkl', 'saltjkl'),
+    ('33333333-d1cc-11f0-9e59-2e6112e38707', 'AKADEMISYEN', 'Selin', 'Aydın', 'selin.aydin@ahievran.edu.tr', 'AKD003', 'hashmno', 'saltmno'),
+    ('44444444-d1cc-11f0-9e59-2e6112e38707', 'PERSONEL', 'Murat', 'Yıldız', 'murat.yildiz@ahievran.edu.tr', 'PRS001', 'hashpqr', 'saltpqr'),
+    ('55555555-d1cc-11f0-9e59-2e6112e38707', 'PERSONEL', 'Elif', 'Demir', 'elif.demir@ahievran.edu.tr', 'PRS002', 'hashstu', 'saltstu');
+
+-- Yeni Fakülteler
+INSERT INTO fakulteler (fakulte_uuid, fakulte_ad, web_adres, kurulus_tarihi)
+VALUES 
+    ('66666666-d1cc-11f0-9e59-2e6112e38707', 'Mühendislik Fakültesi', 'muhendislik.ahievran.edu.tr', '1995-09-01'),
+    ('77777777-d1cc-11f0-9e59-2e6112e38707', 'Fen Edebiyat Fakültesi', 'fenedebiyat.ahievran.edu.tr', '1980-09-01'),
+    ('88888888-d1cc-11f0-9e59-2e6112e38707', 'Tıp Fakültesi', 'tip.ahievran.edu.tr', '2000-09-01'),
+    ('99999999-d1cc-11f0-9e59-2e6112e38707', 'Eğitim Fakültesi', 'egitim.ahievran.edu.tr', '1985-09-01'),
+    ('aaaaaaa1-d1cc-11f0-9e59-2e6112e38707', 'İktisadi ve İdari Bilimler Fakültesi', 'iibf.ahievran.edu.tr', '1990-09-01');
+
+-- Yeni Ana Dallar
+INSERT INTO ana_dallar (ana_dal_uuid, ana_dal_ad, fakulte_uuid, kurulus_tarihi)
+VALUES 
+    ('bbbbbbb1-d1cc-11f0-9e59-2e6112e38707', 'Bilgisayar Mühendisliği', '66666666-d1cc-11f0-9e59-2e6112e38707', '1995-09-01'),
+    ('ccccccc1-d1cc-11f0-9e59-2e6112e38707', 'Makine Mühendisliği', '66666666-d1cc-11f0-9e59-2e6112e38707', '1995-09-01'),
+    ('ddddddd1-d1cc-11f0-9e59-2e6112e38707', 'Matematik', '77777777-d1cc-11f0-9e59-2e6112e38707', '1980-09-01'),
+    ('eeeeeee1-d1cc-11f0-9e59-2e6112e38707', 'Fizik', '77777777-d1cc-11f0-9e59-2e6112e38707', '1980-09-01'),
+    ('fffffff1-d1cc-11f0-9e59-2e6112e38707', 'Tıp Bilimleri', '88888888-d1cc-11f0-9e59-2e6112e38707', '2000-09-01');
+
+-- Yeni Bölümler
+INSERT INTO bolumler (bolum_uuid, bolum_ad, ana_dal_uuid, kurulus_tarihi)
+VALUES 
+    ('11111112-d1cc-11f0-9e59-2e6112e38707', 'Yazılım Mühendisliği', 'bbbbbbb1-d1cc-11f0-9e59-2e6112e38707', '1995-09-01'),
+    ('22222223-d1cc-11f0-9e59-2e6112e38707', 'Veri Bilimi', 'bbbbbbb1-d1cc-11f0-9e59-2e6112e38707', '1995-09-01'),
+    ('33333334-d1cc-11f0-9e59-2e6112e38707', 'Termodinamik', 'ccccccc1-d1cc-11f0-9e59-2e6112e38707', '1995-09-01'),
+    ('44444445-d1cc-11f0-9e59-2e6112e38707', 'Cebir', 'ddddddd1-d1cc-11f0-9e59-2e6112e38707', '1980-09-01'),
+    ('55555556-d1cc-11f0-9e59-2e6112e38707', 'Kuantum Mekaniği', 'eeeeeee1-d1cc-11f0-9e59-2e6112e38707', '1980-09-01');
+
+-- Yeni Adresler
+INSERT INTO adresler (kullanici_uuid, sokak, sehir, ilce, posta_kodu, ulke, oncelikli) VALUES
+    ('11111111-d1cc-11f0-9e59-2e6112e38707', 'Atatürk Cad. No:5', 'İstanbul', 'Kadıköy', '34710', 'Türkiye', 1),
+    ('22222222-d1cc-11f0-9e59-2e6112e38707', 'Cumhuriyet Mah. 3. Sokak', 'İzmir', 'Konak', '35210', 'Türkiye', 1),
+    ('33333333-d1cc-11f0-9e59-2e6112e38707', 'Barbaros Bulvarı No:20', 'Ankara', 'Çankaya', '06530', 'Türkiye', 1),
+    ('44444444-d1cc-11f0-9e59-2e6112e38707', 'İnönü Cad. No:15', 'Antalya', 'Muratpaşa', '07100', 'Türkiye', 1),
+    ('55555555-d1cc-11f0-9e59-2e6112e38707', 'Kordonboyu Mah. 7. Sokak', 'Trabzon', 'Ortahisar', '61030', 'Türkiye', 1);
+
+-- Yeni Telefonlar
+INSERT INTO telefonlar (kullanici_uuid, ulke_kodu, telefon_numarasi, telefon_tipi, oncelikli) VALUES
+    ('11111111-d1cc-11f0-9e59-2e6112e38707', '+90', '5321111111', 'CEP', 1),
+    ('22222222-d1cc-11f0-9e59-2e6112e38707', '+90', '5322222222', 'CEP', 1),
+    ('33333333-d1cc-11f0-9e59-2e6112e38707', '+90', '5323333333', 'CEP', 1),
+    ('44444444-d1cc-11f0-9e59-2e6112e38707', '+90', '5324444444', 'CEP', 1),
+    ('55555555-d1cc-11f0-9e59-2e6112e38707', '+90', '5325555555', 'CEP', 1);
+
+-- Yeni E-postalar
+INSERT INTO epostalar (kullanici_uuid, eposta_adresi, eposta_tipi, oncelikli) VALUES
+    ('11111111-d1cc-11f0-9e59-2e6112e38707', 'zeynep.kara@gmail.com', 'KISISEL', 1),
+    ('22222222-d1cc-11f0-9e59-2e6112e38707', 'emre.sahin@gmail.com', 'KISISEL', 1),
+    ('33333333-d1cc-11f0-9e59-2e6112e38707', 'selin.aydin@gmail.com', 'KISISEL', 1),
+    ('44444444-d1cc-11f0-9e59-2e6112e38707', 'murat.yildiz@gmail.com', 'KISISEL', 1),
+    ('55555555-d1cc-11f0-9e59-2e6112e38707', 'elif.demir@gmail.com', 'KISISEL', 1);
+
+-- Yeni Dersler
+INSERT INTO dersler (ders_uuid, ders_kodu, ders_adi, aciklama, haftalik_ders_saati, kredi, akts)
+VALUES 
+    ('66666666-d1cc-11f0-9e59-2e6112e38707', 'BLM501', 'Yapay Zeka', 'Makine öğrenmesi ve yapay zeka algoritmaları', 3, 3, 5),
+    ('77777777-d1cc-11f0-9e59-2e6112e38707', 'BLM601', 'Siber Güvenlik', 'Bilgi güvenliği ve siber tehditler', 3, 3, 5),
+    ('88888888-d1cc-11f0-9e59-2e6112e38707', 'BLM701', 'Robotik', 'Robotik sistemler ve kontrol', 3, 3, 5),
+    ('99999999-d1cc-11f0-9e59-2e6112e38707', 'BLM801', 'Blockchain Teknolojileri', 'Blockchain ve kripto para sistemleri', 3, 3, 5),
+    ('aaaaaaa2-d1cc-11f0-9e59-2e6112e38707', 'BLM901', 'Büyük Veri', 'Büyük veri analitiği ve Hadoop', 3, 3, 5);
