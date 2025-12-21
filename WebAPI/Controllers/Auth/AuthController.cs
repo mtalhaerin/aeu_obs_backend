@@ -1,21 +1,23 @@
 ﻿using Business.Concrete;
+using Business.Features.CQRS.Auth.Login;
 using Entities.Concrete.OzlukEntities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Controllers.Base;
 
 namespace WebAPI.Controllers.Auth
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : GenericController
     {
-        private readonly ILogger<AuthController> _logger;
         private readonly IKullaniciService _kullaniciService;
 
         public AuthController(
+            IMediator mediator,
             ILogger<AuthController> logger,
-            IKullaniciService kullaniciService)
+            IKullaniciService kullaniciService) : base(mediator, logger)
         {
-            _logger = logger;
             _kullaniciService = kullaniciService;
         }
 
@@ -56,9 +58,9 @@ namespace WebAPI.Controllers.Auth
 
         // Giriş yapma
         [HttpPost("login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
-            return Ok();
+            return await SendCommand(command);
         }
 
         // Çıkış yapma

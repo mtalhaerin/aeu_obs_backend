@@ -11,6 +11,7 @@ namespace Business.Concrete
     {
         Task<IDataResult<Kullanici?>> GetByUuid(Guid kullaniciUuid);
         Task<IDataResult<Kullanici?>> GetByUuidAsync(Guid kullaniciUuid);
+        Task<IDataResult<Kullanici?>> GetByEmailAsync(string kurum_eposta);
     }
 
     public class KullaniciManager : IKullaniciService
@@ -35,6 +36,16 @@ namespace Business.Concrete
         public async Task<IDataResult<Kullanici?>> GetByUuidAsync(Guid kullaniciUuid)
         {
             var result = await _kullaniciDal.GetAsync(k => k.KullaniciUuid == kullaniciUuid);
+            if (result is null)
+            {
+                return new DataResult<Kullanici?>(null, false); // or include message
+            }
+            return new DataResult<Kullanici?>(result, true);
+        }
+
+        public async Task<IDataResult<Kullanici?>> GetByEmailAsync(string kurum_eposta)
+        {
+            var result = await _kullaniciDal.GetAsync(k => k.KurumEposta == kurum_eposta);
             if (result is null)
             {
                 return new DataResult<Kullanici?>(null, false); // or include message

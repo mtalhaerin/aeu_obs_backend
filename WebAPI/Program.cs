@@ -17,6 +17,46 @@ namespace WebAPI
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
+            // Configure CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder
+                        .SetIsOriginAllowed(origin =>
+                        {
+                            if (string.IsNullOrEmpty(origin)) return false;
+                            
+                            try
+                            {
+                                var uri = new Uri(origin);
+                                var host = uri.Host;
+                                
+                                // Allow localhost with any port
+                                if (host == "localhost" || host == "127.0.0.1")
+                                    return true;
+                                
+                                // Allow any subdomain of your main domain
+                                // You can modify this to match your specific domain
+                                if (host.EndsWith(".yourdomain.com") || host == "yourdomain.com")
+                                    return true;
+                                
+                                return false;
+                            }
+                            catch
+                            {
+                                return false;
+                            }
+                        })
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
+
+            // Register MediatR
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Business.Features.CQRS.Auth.Login.LoginHandler).Assembly));
+
             // Register application services
             builder.Services.AddScoped<IKullaniciService, KullaniciManager>();
             builder.Services.AddScoped<IKullaniciDal, EFKullaniciDal>();
@@ -46,6 +86,9 @@ namespace WebAPI
                 });
             }
 
+            // Use CORS
+            app.UseCors();
+            
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
