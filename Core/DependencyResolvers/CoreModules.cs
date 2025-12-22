@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Core.DependencyResolvers
 {
-    public class CoreModules : ICoreModule
+    public class CoreModule : ICoreModule
     {
         public void Load(IServiceCollection services)
         {

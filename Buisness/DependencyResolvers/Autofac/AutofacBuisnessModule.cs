@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Business.DependencyResolvers.Autofac
 {
-    public class AutofacBuisnessModule : Module
+    public class AutofacBusinessModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
