@@ -1,11 +1,12 @@
 ﻿using Core.Entities.Abstractions;
-using Entities.Enums;
+using Core.Entities.Concrete.YetkiEntities;
+using Core.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Entities.Concrete.OzlukEntities
+namespace Core.Entities.Concrete.OzlukEntities
 {
     public class Kullanici : EntityBase
     {
@@ -20,5 +21,8 @@ namespace Entities.Concrete.OzlukEntities
         public string ParolaTuz { get; set; } = string.Empty;
         public DateTime OlusturmaTarihi { get; set; }
         public DateTime GuncellemeTarihi { get; set; }
+
+        // Collection navigations
+        public ICollection<KullaniciIslemYetkisi> KullaniciIslemYetkileri { get; set; } = new List<KullaniciIslemYetkisi>();
     }
 }

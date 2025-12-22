@@ -1,5 +1,6 @@
 ﻿using Business.Concrete;
 using Business.Features.CQRS.Auth.Login;
+using Core.Entities.Concrete.OzlukEntities;
 using Entities.Concrete.OzlukEntities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

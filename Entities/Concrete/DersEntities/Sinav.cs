@@ -1,5 +1,5 @@
 ﻿using Core.Entities.Abstractions;
-using Entities.Enums;
+using Core.Entities.Enums;
 using System;
 using System.Collections.Generic;
 

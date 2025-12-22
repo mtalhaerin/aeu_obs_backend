@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Results.Abstract;
+﻿using Core.Entities.Concrete.OzlukEntities;
+using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.DataResults;
 using DataAccess.Concrete.EntityFramework.OzlukDals;
 using Entities.Concrete.OzlukEntities;

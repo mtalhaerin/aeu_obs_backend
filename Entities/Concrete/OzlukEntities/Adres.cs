@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Abstractions;
+using Core.Entities.Concrete.OzlukEntities;
 using System;
 
 namespace Entities.Concrete.OzlukEntities

@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Abstractions;
-using Entities.Enums;
+using Core.Entities.Enums;
+using Core.Entities.Concrete.OzlukEntities;
 using System;
 
 namespace Entities.Concrete.OzlukEntities

@@ -1,6 +1,6 @@
 ﻿using System;
 using Core.Entities.Abstractions;
-using Entities.Concrete.OzlukEntities;
+using Core.Entities.Concrete.OzlukEntities;
 
 namespace Entities.Concrete.DersEntities
 {

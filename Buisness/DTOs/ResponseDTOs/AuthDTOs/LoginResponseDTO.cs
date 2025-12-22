@@ -1,5 +1,5 @@
 ﻿using Business.DTOs._Generic;
-using Entities.Enums;
+using Core.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

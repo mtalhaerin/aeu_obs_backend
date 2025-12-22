@@ -1,5 +1,6 @@
 ﻿using Core.DataAccess;
 using Core.DataAccess.EntityFramework;
+using Core.Entities.Concrete.OzlukEntities;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Entities.Concrete.OzlukEntities;
 using System;

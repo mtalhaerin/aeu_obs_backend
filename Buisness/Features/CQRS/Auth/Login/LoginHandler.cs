@@ -4,7 +4,7 @@ using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Response;
 using Core.Buisiness.Features.CQRS;
 using Core.Utilities.Results.Abstract;
-using Entities.Concrete.OzlukEntities;
+using Core.Entities.Concrete.OzlukEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,10 +1,12 @@
 ﻿using Entities.Concrete.DersEntities;
 using Entities.Concrete.FakulteEntities;
 using Entities.Concrete.OzlukEntities;
-using Entities.Enums;
+using Core.Entities.Concrete.OzlukEntities;
+using Core.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
+using Core.Entities.Concrete.YetkiEntities;
 
 namespace DataAccess.Concrete.EntityFramework.Contexts
 {
@@ -19,11 +21,17 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         }
 
         // Entity Database tablo eşleltirme 
+
         #region Ozluk Entity'leri
         public DbSet<Adres> Adresler { get; set; }
         public DbSet<Eposta> Epostalar { get; set; }
         public DbSet<Kullanici> Kullanicilar { get; set; }
         public DbSet<Telefon> Telefonlar { get; set; }
+        #endregion
+
+        #region Yetki Entity'leri (Core)
+        public DbSet<KullaniciIslemYetkisi> KullaniciIslemYetkileri { get; set; }
+        public DbSet<IslemYetkisi> IslemYetkileri { get; set; }
         #endregion
 
         #region Fakulte Entity'leri
@@ -52,11 +60,110 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
             base.OnModelCreating(modelBuilder);
 
             ConfigureOzlukEntities(modelBuilder);
+            ConfigureYetkiEntities(modelBuilder);
             ConfigureFakulteEntities(modelBuilder);
             ConfigureDersEntities(modelBuilder);
 
         }
 
+        private void ConfigureYetkiEntities(ModelBuilder modelBuilder)
+        {
+            // islem_yetkileri
+            modelBuilder.Entity<IslemYetkisi>(entity =>
+            {
+                entity.ToTable("islem_yetkileri");
+                entity.HasKey(e => e.IslemYetkisiUuid);
+
+                entity.Property(e => e.IslemYetkisiUuid)
+                      .HasColumnName("islem_yetkisi_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.YetkiAdi)
+                      .HasColumnName("yetki_adi")
+                      .HasMaxLength(100)
+                      .IsRequired();
+
+                entity.Property(e => e.Aciklama)
+                      .HasColumnName("aciklama")
+                      .HasColumnType("TEXT");
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+            });
+
+            // kullanici_islem_yetkisi
+            modelBuilder.Entity<KullaniciIslemYetkisi>(entity =>
+            {
+                entity.ToTable("kullanici_islem_yetkisi");
+                entity.HasKey(e => e.YetkiAtamaUuid);
+
+                entity.Property(e => e.YetkiAtamaUuid)
+                      .HasColumnName("yetki_atama_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired()
+                      .HasDefaultValueSql("UUID()");
+
+                entity.Property(e => e.KullaniciUuid)
+                      .HasColumnName("kullanici_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.YetkiVerenUuid)
+                      .HasColumnName("yetki_veren_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
+                entity.Property(e => e.OlusturmaTarihi)
+                      .HasColumnName("olusturma_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.GuncellemeTarihi)
+                      .HasColumnName("guncelleme_tarihi")
+                      .HasColumnType("timestamp")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                      .ValueGeneratedOnAddOrUpdate();
+
+                // Foreign key relationships
+                entity.HasOne(e => e.Kullanici)
+                      .WithMany()
+                      .HasForeignKey(e => e.KullaniciUuid)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .HasConstraintName("FK_KullaniciIslemYetkisi_Kullanicilar");
+
+                entity.HasOne<Kullanici>()
+                      .WithMany()
+                      .HasForeignKey(e => e.YetkiVerenUuid)
+                      .OnDelete(DeleteBehavior.Restrict)
+                      .HasConstraintName("FK_KullaniciIslemYetkisi_YetkiVeren");
+
+                // If there's a shadow property for IslemYetkisiUuid, configure it
+                entity.HasOne(e => e.IslemYetkisi)
+                      .WithMany(i => i.KullaniciIslemYetkileri)
+                      .HasForeignKey("IslemYetkisiUuid")
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .HasConstraintName("FK_KullaniciIslemYetkisi_IslemYetkileri");
+
+                // Indexes
+                entity.HasIndex(e => e.KullaniciUuid)
+                      .HasDatabaseName("IX_KullaniciIslemYetkisi_KullaniciUuid");
+
+                entity.HasIndex(e => e.YetkiVerenUuid)
+                      .HasDatabaseName("IX_KullaniciIslemYetkisi_YetkiVerenUuid");
+            });
+        }
         private void ConfigureOzlukEntities(ModelBuilder modelBuilder)
         {
             // adresler

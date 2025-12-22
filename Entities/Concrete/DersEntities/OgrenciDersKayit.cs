@@ -1,6 +1,6 @@
 ﻿using Core.Entities.Abstractions;
-using Entities.Concrete.OzlukEntities;
-using Entities.Enums;
+using Core.Entities.Concrete.OzlukEntities;
+using Core.Entities.Enums;
 using System;
 
 namespace Entities.Concrete.DersEntities
