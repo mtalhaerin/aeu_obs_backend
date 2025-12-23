@@ -10,13 +10,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.ValidationRules.FluentValidation.FieldValidators;
 
 namespace Business.Features.CQRS.Auth.Login
 {
-    public class LoginCommand : ICommand<BaseResponse<LoginResponseDTO>>
+    public class LoginCommand : ICommand<BaseResponse<LoginResponseDTO>>, 
+        IEmailFieldValidator,
+        IPasswordFieldValidator
     {
-        public string? email { get; set; } = null;
-        public string? password { get; set; } = null;
+        public string? Email { get; set; } = null;
+        public string? Password { get; set; } = null;
     }
     public class LoginHandler : ICommandHandler<LoginCommand, BaseResponse<LoginResponseDTO>>
     {
@@ -33,7 +36,7 @@ namespace Business.Features.CQRS.Auth.Login
             // This is a placeholder implementation.
             try
             {
-                IDataResult<Kullanici?> result = await _kullaniciService.GetByEmailAsync(request.email!);
+                IDataResult<Kullanici?> result = await _kullaniciService.GetByEmailAsync(request.Email!);
                 if (!result.Success)
                 {
                     return BaseResponse<LoginResponseDTO>.Failure("Kullanıcı bulunamadı", statusCode: 404);

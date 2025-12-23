@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Diagnostics;
+using Core.Extensions.Exceptions;
+using Business.Extensions;
 
 namespace WebAPI
 {
@@ -97,6 +99,7 @@ namespace WebAPI
             {
                 new CoreModule()
             });
+            builder.Services.AddBusinessServices(builder.Configuration);
 
             // =========================================================================
             // UYGULAMA İNŞASI (BUILD)
@@ -139,14 +142,13 @@ namespace WebAPI
             }
 
             // Custom Exception Middleware kullanıyorsan burayı açabilirsin
-            // app.ConfigureCustomExceptionMiddleware();
+            app.ConfigureCustomExceptionMiddleware();
 
             app.UseCors();
 
             app.UseHttpsRedirection();
 
             // app.UseRouting(); // .NET 6+ da MapControllers çağrıldığında otomatik eklenir, manuel yazmaya gerek yok ama yazarsan da hata vermez.
-
             // DİKKAT: Authentication Authorization'dan ÖNCE gelmelidir.
             app.UseAuthentication();
             app.UseAuthorization();

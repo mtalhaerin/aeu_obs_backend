@@ -45,7 +45,7 @@ namespace WebAPI.Controllers.Base
             }
             catch (ValidationException validationEx)
             {
-                return StatusCode(400, BaseResponse<T>.Failure(validationEx.Message, validationEx.Errors.Select(e => e.ErrorMessage).ToList()));
+                return StatusCode(400, BaseResponse<T>.Failure("Validation Error", validationEx.Errors.Select(e => e.ErrorMessage).ToList()));
             }
             catch (Exception ex)
             {
