@@ -13,7 +13,7 @@ namespace Core.DataAccess.EntityFramework
         where TEntity : class, IEntity, new()
         where TContext : DbContext, new()
     {
-        # region Sync CRUD Operations
+        #region Sync CRUD Operations
         public void Add(TEntity entity)
         {
             using (TContext context = new TContext())
@@ -61,9 +61,9 @@ namespace Core.DataAccess.EntityFramework
                 context.SaveChanges();
             }
         }
-        # endregion
+        #endregion
 
-        # region Async CRUD Operations
+        #region Async CRUD Operations
         public async Task AddAsync(TEntity entity)
         {
             using (TContext context = new TContext())
@@ -112,6 +112,21 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        # endregion
+        // --- Explicit Interface Implementations (Fixlenen Kısım) ---
+
+        // Senkron versiyon: IList zaten IEnumerable implemente ettiği için direkt dönüş yapabiliriz.
+        IEnumerable<TEntity> IEntityRepository<TEntity>.GetAll(Expression<Func<TEntity, bool>>? filter)
+        {
+            return GetAll(filter);
+        }
+
+        // Asenkron versiyon: Task<IList> ile Task<IEnumerable> arasında cast yapılamaz.
+        // Bu yüzden await ile sonucu alıp IEnumerable olarak döndürüyoruz.
+        async Task<IEnumerable<TEntity>> IEntityRepository<TEntity>.GetAllAsync(Expression<Func<TEntity, bool>>? filter)
+        {
+            return await GetAllAsync(filter);
+        }
+
+        #endregion
     }
 }

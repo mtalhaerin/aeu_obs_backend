@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations.v3
 {
     [DbContext(typeof(AEUContext))]
-    [Migration("20251222212321_InitialCreateV3")]
+    [Migration("20251223024009_InitialCreateV3")]
     partial class InitialCreateV3
     {
         /// <inheritdoc />
@@ -168,8 +168,10 @@ namespace DataAccess.Migrations.v3
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("GuncellemeTarihi"));
 
-                    b.Property<Guid?>("IslemYetkisiUuid")
-                        .HasColumnType("char(36)");
+                    b.Property<Guid>("IslemYetkisiUuid")
+                        .HasMaxLength(36)
+                        .HasColumnType("char(36)")
+                        .HasColumnName("islem_yetkisi_uuid");
 
                     b.Property<Guid>("KullaniciUuid")
                         .HasMaxLength(36)
@@ -192,7 +194,8 @@ namespace DataAccess.Migrations.v3
 
                     b.HasKey("YetkiAtamaUuid");
 
-                    b.HasIndex("IslemYetkisiUuid");
+                    b.HasIndex("IslemYetkisiUuid")
+                        .HasDatabaseName("IX_KullaniciIslemYetkisi_IslemYetkisiUuid");
 
                     b.HasIndex("KullaniciUuid")
                         .HasDatabaseName("IX_KullaniciIslemYetkisi_KullaniciUuid");
@@ -983,6 +986,7 @@ namespace DataAccess.Migrations.v3
                         .WithMany("KullaniciIslemYetkileri")
                         .HasForeignKey("IslemYetkisiUuid")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_KullaniciIslemYetkisi_IslemYetkileri");
 
                     b.HasOne("Core.Entities.Concrete.OzlukEntities.Kullanici", "Kullanici")

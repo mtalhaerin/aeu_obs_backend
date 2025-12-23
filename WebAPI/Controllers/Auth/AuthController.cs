@@ -5,6 +5,7 @@ using Entities.Concrete.OzlukEntities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.Base;
+using WebAPI.Filters;
 
 namespace WebAPI.Controllers.Auth
 {
@@ -23,14 +24,16 @@ namespace WebAPI.Controllers.Auth
         }
 
         // Kayıt olma
-        [HttpPost("register")]
-        public IActionResult Register()
-        {
-            return Ok();
-        }
+        //[HttpPost("register")]
+        //[RejectAuthorizationHeader]
+        //public IActionResult Register()
+        //{
+        //    return Ok();
+        //}
 
         // Email doğrulama
         [HttpGet("verify-email")]
+        [RejectAuthorizationHeader]
         public IActionResult VerifyEmail()
         {
             return Ok();
@@ -38,6 +41,7 @@ namespace WebAPI.Controllers.Auth
 
         // Parola kurtarma isteği
         [HttpPost("forgot-password")]
+        [RejectAuthorizationHeader]
         public IActionResult ForgotPassword()
         {
             return Ok();
@@ -59,6 +63,7 @@ namespace WebAPI.Controllers.Auth
 
         // Giriş yapma
         [HttpPost("login")]
+        [RejectAuthorizationHeader]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
             return await SendCommand(command);

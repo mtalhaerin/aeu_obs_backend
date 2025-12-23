@@ -14,18 +14,18 @@ using Core.Extensions.Yetki;
 
 namespace Core.Utilities.Security.JWT
 {
-    public class JwtHelper : ITokenHelper
+    public class JWTHelper : ITokenHelper
     {
         public IConfiguration Configuration { get; }
         private TokenOptions _tokenOptions;
         private DateTime _accessTokenExpiration;
-        public JwtHelper(IConfiguration configuration)
+        public JWTHelper(IConfiguration configuration)
         {
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
         }
-        public AccessToken CreateToken(Kullanici kullanici, List<IslemYetkisi> islemYetkileri)
+        public AccessToken CreateToken(Kullanici kullanici, List<IslemYetkisi>? islemYetkileri)
         {
             _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
@@ -43,7 +43,7 @@ namespace Core.Utilities.Security.JWT
         }
 
         public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, Kullanici kullanici,
-            SigningCredentials signingCredentials, List<IslemYetkisi> islemYetkileri)
+            SigningCredentials signingCredentials, List<IslemYetkisi>? islemYetkileri)
         {
             var jwt = new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
@@ -56,7 +56,7 @@ namespace Core.Utilities.Security.JWT
             return jwt;
         }
 
-        private IEnumerable<Claim> SetClaims(Kullanici kullanici, List<IslemYetkisi> islemYetkileri)
+        private IEnumerable<Claim> SetClaims(Kullanici kullanici, List<IslemYetkisi>? islemYetkileri)
         {
             var claims = new List<Claim>();
             claims.AddNameIdentifier(kullanici.KullaniciUuid.ToString());
@@ -65,7 +65,10 @@ namespace Core.Utilities.Security.JWT
             claims.AddFirstName(kullanici.Ad);
             claims.AddLastName(kullanici.Soyad);
             claims.AddMiddleName(kullanici.OrtaAd);
-            claims.AddRoles(islemYetkileri.Select(c => c.YetkiAdi).ToArray());
+            if (islemYetkileri != null)
+                claims.AddRoles(islemYetkileri.Select(c => c.YetkiAdi).ToArray());
+            else
+                claims.AddRoles(Array.Empty<string>());
 
             return claims;
         }

@@ -68,7 +68,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
         private void ConfigureYetkiEntities(ModelBuilder modelBuilder)
         {
-            // islem_yetkileri
+            // --- ISLEM YETKILERI ---
             modelBuilder.Entity<IslemYetkisi>(entity =>
             {
                 entity.ToTable("islem_yetkileri");
@@ -102,7 +102,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
             });
 
-            // kullanici_islem_yetkisi
+            // --- KULLANICI ISLEM YETKISI ---
             modelBuilder.Entity<KullaniciIslemYetkisi>(entity =>
             {
                 entity.ToTable("kullanici_islem_yetkisi");
@@ -124,6 +124,11 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasMaxLength(36)
                       .IsRequired();
 
+                entity.Property(e => e.IslemYetkisiUuid)
+                      .HasColumnName("islem_yetkisi_uuid")
+                      .HasMaxLength(36)
+                      .IsRequired();
+
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
                       .HasColumnType("timestamp")
@@ -136,32 +141,36 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                // Foreign key relationships
+                // --- İLİŞKİLER (FIX OLAN KISIM) ---
+
+                // 1. Yetkiyi ALAN Kullanıcı İlişkisi
+                // Kullanıcı sınıfındaki "KullaniciIslemYetkileri" listesi, o kullanıcının SAHİP OLDUĞU yetkileri gösterir.
                 entity.HasOne(e => e.Kullanici)
-                      .WithMany()
+                      .WithMany(k => k.KullaniciIslemYetkileri)
                       .HasForeignKey(e => e.KullaniciUuid)
                       .OnDelete(DeleteBehavior.Cascade)
                       .HasConstraintName("FK_KullaniciIslemYetkisi_Kullanicilar");
 
+                // 2. Yetkiyi VEREN Kullanıcı İlişkisi
+                // DİKKAT: Buradaki .WithMany() içini BOŞ bırakıyoruz.
+                // Eğer buraya da (k => k.KullaniciIslemYetkileri) yazarsanız döngü oluşur ve hata alırsınız.
                 entity.HasOne<Kullanici>()
-                      .WithMany()
+                      .WithMany() // <-- BOŞ BIRAKILDI
                       .HasForeignKey(e => e.YetkiVerenUuid)
-                      .OnDelete(DeleteBehavior.Restrict)
+                      .OnDelete(DeleteBehavior.Restrict) // Yetki veren silinirse kayıtlar bozulmasın
                       .HasConstraintName("FK_KullaniciIslemYetkisi_YetkiVeren");
 
-                // If there's a shadow property for IslemYetkisiUuid, configure it
+                // 3. İşlem Yetkisi İlişkisi
                 entity.HasOne(e => e.IslemYetkisi)
                       .WithMany(i => i.KullaniciIslemYetkileri)
-                      .HasForeignKey("IslemYetkisiUuid")
+                      .HasForeignKey(e => e.IslemYetkisiUuid)
                       .OnDelete(DeleteBehavior.Cascade)
                       .HasConstraintName("FK_KullaniciIslemYetkisi_IslemYetkileri");
 
-                // Indexes
-                entity.HasIndex(e => e.KullaniciUuid)
-                      .HasDatabaseName("IX_KullaniciIslemYetkisi_KullaniciUuid");
-
-                entity.HasIndex(e => e.YetkiVerenUuid)
-                      .HasDatabaseName("IX_KullaniciIslemYetkisi_YetkiVerenUuid");
+                // İndeksler
+                entity.HasIndex(e => e.KullaniciUuid).HasDatabaseName("IX_KullaniciIslemYetkisi_KullaniciUuid");
+                entity.HasIndex(e => e.YetkiVerenUuid).HasDatabaseName("IX_KullaniciIslemYetkisi_YetkiVerenUuid");
+                entity.HasIndex(e => e.IslemYetkisiUuid).HasDatabaseName("IX_KullaniciIslemYetkisi_IslemYetkisiUuid");
             });
         }
         private void ConfigureOzlukEntities(ModelBuilder modelBuilder)

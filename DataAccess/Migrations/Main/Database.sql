@@ -27,16 +27,24 @@ CREATE TABLE IF NOT EXISTS islem_yetkileri(
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
 CREATE TABLE IF NOT EXISTS kullanici_islem_yetkisi(
     yetki_atama_uuid VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     kullanici_uuid VARCHAR(36) NOT NULL,
     yetki_veren_uuid VARCHAR(36) NOT NULL,
+    
+    -- EKLENEN KOLON
+    islem_yetkisi_uuid VARCHAR(36) NOT NULL, 
+    
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE,
-    FOREIGN KEY (yetki_veren_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE
+    
+    -- Yetki veren silinirse kaydın silinmesini istiyorsan CASCADE kalabilir
+    FOREIGN KEY (yetki_veren_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE, 
+    
+    -- EKLENEN FOREIGN KEY BAĞLANTISI
+    FOREIGN KEY (islem_yetkisi_uuid) REFERENCES islem_yetkileri(islem_yetkisi_uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS fakulteler(
