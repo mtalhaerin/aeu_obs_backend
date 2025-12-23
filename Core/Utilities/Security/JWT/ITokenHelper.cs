@@ -5,6 +5,6 @@ namespace Core.Utilities.Security.JWT
 {
     public interface ITokenHelper
     {
-        AccessToken CreateToken(Kullanici kullanici, List<IslemYetkisi> islemYetkileri);
+        AccessToken CreateToken(Kullanici kullanici, IEnumerable<KullaniciIslemYetkisi>? islemYetkileri);
     }
 }

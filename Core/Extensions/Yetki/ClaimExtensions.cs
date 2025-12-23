@@ -61,5 +61,9 @@ namespace Core.Extensions.Yetki
             // Manuel olarak "role" string'ini kullanmak en temizidir.
             roles.ToList().ForEach(role => claims.Add(new Claim("role", role)));
         }
+        public static void AddRoles(this ICollection<Claim> claims, Guid[] roles)
+        {
+            roles.ToList().ForEach(role => claims.Add(new Claim("role", role.ToString())));
+        }
     }
 }

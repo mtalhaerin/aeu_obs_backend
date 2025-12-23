@@ -4,6 +4,7 @@ using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Response;
 using Business.ValidationRules.FluentValidation.FieldValidators;
 using Core.Buisiness.Features.CQRS;
+using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
 using Core.Entities.Concrete.YetkiEntities;
 using Core.Utilities.Results.Abstract;
@@ -29,19 +30,20 @@ namespace Business.Features.CQRS.Auth.Login
     {
         private readonly IKullaniciService _kullaniciService;
         private readonly IYetkiService _yetkiService;
-
-        // 1. ADIM: Token servisini buraya tanımlıyoruz
         private readonly ITokenHelper _tokenHelper;
+        private readonly ITokenCacheManager _tokenCacheManager;
 
-        // 2. ADIM: Constructor'da servisi inject ediyoruz
         public LoginHandler(
             IKullaniciService kullaniciService,
             IYetkiService yetkiService,
-            ITokenHelper tokenHelper)
+            ITokenHelper tokenHelper,
+            ITokenCacheManager tokenCacheManager)
         {
             _kullaniciService = kullaniciService;
             _yetkiService = yetkiService;
             _tokenHelper = tokenHelper;
+            _tokenCacheManager = tokenCacheManager;
+
         }
 
         public async Task<BaseResponse<LoginResponseDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -54,19 +56,15 @@ namespace Business.Features.CQRS.Auth.Login
                     return BaseResponse<LoginResponseDTO>.Failure("Kullanıcı bulunamadı", statusCode: 404);
                 }
 
-                // Debug logları (Production'da kaldırılmalı)
-                // Console.WriteLine($"result.Data.ParolaHash: {kullanici.Data!.ParolaHash}");
-
                 if (!HashingHelper.VerifyPasswordHash(request.Password!, kullanici.Data!.ParolaHash, kullanici.Data!.ParolaTuz))
                 {
                     return BaseResponse<LoginResponseDTO>.Failure("Parola hatalı", statusCode: 401);
                 }
 
-                // Yetkileri çekmek istersen burayı açabilirsin
-                // var islemYetkileri = await _yetkiService.GetKullaniciYetkileriAsync(kullanici.Data.KullaniciUuid);
+                IDataResult<IEnumerable<KullaniciIslemYetkisi>>? islemYetkileri = await _yetkiService.GetKullaniciYetkileriAsync(kullanici.Data.KullaniciUuid);
 
-                // 3. ADIM: Artık static sınıf adıyla değil, inject ettiğimiz nesneyle çağırıyoruz
-                AccessToken token = _tokenHelper.CreateToken(kullanici.Data, null);
+                AccessToken token = _tokenHelper.CreateToken(kullanici.Data, islemYetkileri.Data);
+                _tokenCacheManager.RegisterToken(token.Token, kullanici.Data.KullaniciUuid, token.ExpireInMinutes);
 
                 var loginResponse = new LoginResponseDTO
                 {

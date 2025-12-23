@@ -19,31 +19,43 @@ namespace Core.Utilities.Security.JWT
         public IConfiguration Configuration { get; }
         private TokenOptions _tokenOptions;
         private DateTime _accessTokenExpiration;
+        private int _accessTokenExpireInMinutes;
         public JWTHelper(IConfiguration configuration)
         {
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
         }
-        public AccessToken CreateToken(Kullanici kullanici, List<IslemYetkisi>? islemYetkileri)
+        public AccessToken CreateToken(Kullanici kullanici, IEnumerable<KullaniciIslemYetkisi>? islemYetkileri)
         {
-            _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
-            var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
-            var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
-            var jwt = CreateJwtSecurityToken(_tokenOptions, kullanici, signingCredentials, islemYetkileri);
-            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-            var token = jwtSecurityTokenHandler.WriteToken(jwt);
-
-            return new AccessToken
+            try
             {
-                Token = token,
-                Expiration = _accessTokenExpiration
-            };
 
+                _accessTokenExpireInMinutes = _tokenOptions.AccessTokenExpiration;
+                _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
+                var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
+                var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
+                var jwt = CreateJwtSecurityToken(_tokenOptions, kullanici, signingCredentials,
+                    islemYetkileri == null ? null : islemYetkileri.ToList());
+                var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+                var token = jwtSecurityTokenHandler.WriteToken(jwt);
+
+                return new AccessToken
+                {
+                    Token = token,
+                    Expiration = _accessTokenExpiration,
+                    ExpireInMinutes = _accessTokenExpireInMinutes
+
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, Kullanici kullanici,
-            SigningCredentials signingCredentials, List<IslemYetkisi>? islemYetkileri)
+            SigningCredentials signingCredentials, List<KullaniciIslemYetkisi>? islemYetkileri)
         {
             var jwt = new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
@@ -56,7 +68,7 @@ namespace Core.Utilities.Security.JWT
             return jwt;
         }
 
-        private IEnumerable<Claim> SetClaims(Kullanici kullanici, List<IslemYetkisi>? islemYetkileri)
+        private IEnumerable<Claim> SetClaims(Kullanici kullanici, List<KullaniciIslemYetkisi>? islemYetkileri)
         {
             var claims = new List<Claim>();
             claims.AddNameIdentifier(kullanici.KullaniciUuid.ToString());
@@ -66,7 +78,7 @@ namespace Core.Utilities.Security.JWT
             claims.AddLastName(kullanici.Soyad);
             claims.AddMiddleName(kullanici.OrtaAd);
             if (islemYetkileri != null)
-                claims.AddRoles(islemYetkileri.Select(c => c.YetkiAdi).ToArray());
+                claims.AddRoles(islemYetkileri.Select(c => c.IslemYetkisiUuid).ToArray());
             else
                 claims.AddRoles(Array.Empty<string>());
 

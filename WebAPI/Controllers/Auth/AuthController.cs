@@ -1,8 +1,10 @@
 ﻿using Business.Concrete;
 using Business.Features.CQRS.Auth.Login;
+using Business.Features.CQRS.Auth.Logout;
 using Core.Entities.Concrete.OzlukEntities;
 using Entities.Concrete.OzlukEntities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.Base;
 using WebAPI.Filters;
@@ -56,6 +58,7 @@ namespace WebAPI.Controllers.Auth
 
         // Şifre değiştirme
         [HttpPost("change-password")]
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return Ok();
@@ -71,13 +74,15 @@ namespace WebAPI.Controllers.Auth
 
         // Çıkış yapma
         [HttpPost("logout")]
-        public IActionResult Logout()
+        [Authorize]
+        public IActionResult Logout([FromHeader(Name = "Authorization")] LogoutCommand command)
         {
             return Ok();
         }
 
         // Token yenileme
         [HttpPost("refresh")]
+        [Authorize]
         public IActionResult Refresh()
         {
             return Ok();
@@ -85,6 +90,7 @@ namespace WebAPI.Controllers.Auth
 
         // Kullanıcı profili Görüntüleme
         [HttpGet("profile")]
+        [Authorize]
         public IActionResult GetProfile()
         {
             return Ok();
@@ -92,6 +98,7 @@ namespace WebAPI.Controllers.Auth
 
         // Kullanıcı profili Güncelleme
         [HttpPost("profile")]
+        [Authorize]
         public IActionResult UpdateProfile([FromBody] Kullanici a, [FromQuery] int b, [FromHeader] int c)
         {
             return Ok();

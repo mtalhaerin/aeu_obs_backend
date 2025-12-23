@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Business.Concrete;
+using Business.Features.CQRS._Generic.Helpers;
 using Core.Utilities.Security.JWT;
 using DataAccess.Concrete.EntityFramework.OzlukDals;
 using DataAccess.Concrete.EntityFramework.YetkiDals;
@@ -18,6 +19,7 @@ namespace Business.DependencyResolvers.Autofac
             // Here you can register your business services with Autofac
             // Example:
             // builder.RegisterType<YourService>().As<IYourService>().SingleInstance();
+            builder.RegisterType<GenericHelper>().As<IGenericHelper>().SingleInstance();
             builder.RegisterType<JWTHelper>().As<ITokenHelper>().SingleInstance();
         
             builder.RegisterType<KullaniciManager>().As<IKullaniciService>().SingleInstance();
