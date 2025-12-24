@@ -85,25 +85,17 @@ namespace WebAPI.Controllers.Auth
         // Token yenileme
         [HttpPost("refresh")]
         [Authorize]
+        public async Task<IActionResult> Refresh([FromHeader(Name = "Authorization")] LogoutCommand command)
+        {
+            return await SendCommand(command);
+        }
+
+        // Token validating
+        [HttpPost("validate")]
+        [Authorize]
         public IActionResult Refresh()
         {
             return Ok();
         }
-
-        // Kullanıcı profili Görüntüleme
-        //[HttpGet("profile")]
-        //[Authorize]
-        //public async Task<IActionResult> GetProfile([FromHeader(Name = "Authorization")] ProfileQuery query)
-        //{
-        //    return await SendQuery(query);
-        //}
-
-        // Kullanıcı profili Güncelleme
-        //[HttpPost("profile")]
-        //[Authorize]
-        //public IActionResult UpdateProfile([FromHeader(Name = "Authorization")] ProfileCommand command)
-        //{
-        //    return Ok();
-        //}
     }
 }
