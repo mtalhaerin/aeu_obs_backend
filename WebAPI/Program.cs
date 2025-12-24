@@ -133,7 +133,7 @@ namespace WebAPI
             });
 
             // MediatR
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Business.Features.CQRS.Auth.Login.LoginHandler).Assembly));
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Business.Features.CQRS.Auth.Login.LoginCommandHandler).Assembly));
 
             // Standart Servisler
             builder.Services.AddScoped<IKullaniciService, KullaniciManager>();

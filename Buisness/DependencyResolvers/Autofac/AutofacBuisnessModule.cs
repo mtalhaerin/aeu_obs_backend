@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Business.Concrete;
+using Business.Concrete.OzlukManagers;
 using Business.Features.CQRS._Generic.Helpers;
 using Core.Utilities.Security.JWT;
 using DataAccess.Concrete.EntityFramework.OzlukDals;
@@ -29,7 +30,15 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EFIslemYetkisiDal>().As<IIslemYetkisiDal>().SingleInstance();
             builder.RegisterType<EFKullaniciIslemYetkisiDal>().As<IKullaniciIslemYetkisiDal>().SingleInstance();
 
+            builder.RegisterType<AdresManager>().As<IAdresService>().SingleInstance();
+            builder.RegisterType<EFAdresDal>().As<IAdresDal>().SingleInstance();
 
+            builder.RegisterType<TelefonManager>().As<ITelefonService>().SingleInstance();
+            builder.RegisterType<EFTelefonDal>().As<ITelefonDal>().SingleInstance();
+
+
+            builder.RegisterType<EpostaManager>().As<IEpostaService>().SingleInstance();
+            builder.RegisterType<EFEpostaDal>().As<IEpostaDal>().SingleInstance();
         }
     }
 }

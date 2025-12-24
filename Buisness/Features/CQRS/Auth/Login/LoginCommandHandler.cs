@@ -1,5 +1,5 @@
 ﻿using Business.Concrete;
-using Business.DTOs.ResponseDTOs.AuthDTOs;
+using Business.DTOs.ResponseDTOs.AuthDTOs.Command;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Response;
 using Business.ValidationRules.FluentValidation.FieldValidators;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Auth.Login
 {
-    public class LoginCommand : ICommand<BaseResponse<LoginResponseDTO>>,
+    public class LoginCommand : ICommand<BaseResponse<LoginCommandResponseDTO>>,
         IEmailFieldValidator,
         IPasswordFieldValidator
     {
@@ -26,14 +26,14 @@ namespace Business.Features.CQRS.Auth.Login
         public string? Password { get; set; } = null;
     }
 
-    public class LoginHandler : ICommandHandler<LoginCommand, BaseResponse<LoginResponseDTO>>
+    public class LoginCommandHandler : ICommandHandler<LoginCommand, BaseResponse<LoginCommandResponseDTO>>
     {
         private readonly IKullaniciService _kullaniciService;
         private readonly IYetkiService _yetkiService;
         private readonly ITokenHelper _tokenHelper;
         private readonly ITokenCacheManager _tokenCacheManager;
 
-        public LoginHandler(
+        public LoginCommandHandler(
             IKullaniciService kullaniciService,
             IYetkiService yetkiService,
             ITokenHelper tokenHelper,
@@ -46,19 +46,19 @@ namespace Business.Features.CQRS.Auth.Login
 
         }
 
-        public async Task<BaseResponse<LoginResponseDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<LoginCommandResponseDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 IDataResult<Kullanici?> kullanici = await _kullaniciService.GetByEmailAsync(request.Email!);
                 if (!kullanici.Success)
                 {
-                    return BaseResponse<LoginResponseDTO>.Failure("Kullanıcı bulunamadı", statusCode: 404);
+                    return BaseResponse<LoginCommandResponseDTO>.Failure("Kullanıcı bulunamadı", statusCode: 404);
                 }
 
                 if (!HashingHelper.VerifyPasswordHash(request.Password!, kullanici.Data!.ParolaHash, kullanici.Data!.ParolaTuz))
                 {
-                    return BaseResponse<LoginResponseDTO>.Failure("Parola hatalı", statusCode: 401);
+                    return BaseResponse<LoginCommandResponseDTO>.Failure("Parola hatalı", statusCode: 401);
                 }
 
                 IDataResult<IEnumerable<KullaniciIslemYetkisi>>? islemYetkileri = await _yetkiService.GetKullaniciYetkileriAsync(kullanici.Data.KullaniciUuid);
@@ -66,12 +66,12 @@ namespace Business.Features.CQRS.Auth.Login
                 AccessToken token = _tokenHelper.CreateToken(kullanici.Data, islemYetkileri.Data);
                 _tokenCacheManager.RegisterToken(token.Token, kullanici.Data.KullaniciUuid, token.ExpireInMinutes);
 
-                var loginResponse = new LoginResponseDTO
+                var loginResponse = new LoginCommandResponseDTO
                 {
                     AccessToken = token.Token
                 };
 
-                return BaseResponse<LoginResponseDTO>.Success(loginResponse, "Giriş başarılı", 200);
+                return BaseResponse<LoginCommandResponseDTO>.Success(loginResponse, "Giriş başarılı", 200);
             }
             catch (Exception)
             {

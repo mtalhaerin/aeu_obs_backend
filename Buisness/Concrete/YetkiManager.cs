@@ -30,13 +30,12 @@ namespace Business.Concrete
 
         public async Task<IDataResult<IEnumerable<KullaniciIslemYetkisi>>> GetKullaniciYetkileriAsync(Guid kullaniciUuid)
         {
-            // GetAll senkron bir metot olduğu için sonucu alıyoruz
-            var result = await _kullaniciIslemYetkisiDal.GetAllAsync(k => k.KullaniciUuid == kullaniciUuid);
+            if (kullaniciUuid == Guid.Empty)
+                return new ErrorDataResult<IEnumerable<KullaniciIslemYetkisi>>(new List<KullaniciIslemYetkisi>(), "Geçersiz kullanıcı UUID'si.");
 
+            IEnumerable<KullaniciIslemYetkisi> result = await _kullaniciIslemYetkisiDal.GetAllAsync(k => k.KullaniciUuid == kullaniciUuid);
             if (result == null || !result.Any())
-            {
-                return new ErrorDataResult<IEnumerable<KullaniciIslemYetkisi>>("Kullanıcıya ait bir yetki bulunamadı.");
-            }
+                return new SuccessDataResult<IEnumerable<KullaniciIslemYetkisi>>(new List<KullaniciIslemYetkisi>(), "Kullanıcıya ait bir yetki bulunamadı.");
 
             return new SuccessDataResult<IEnumerable<KullaniciIslemYetkisi>>(result, "Kullanıcıya ait yetkiler başarıyla getirildi.");
         }

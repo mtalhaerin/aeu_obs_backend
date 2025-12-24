@@ -1,11 +1,13 @@
 ﻿using Business.Concrete;
 using Business.Features.CQRS.Auth.Login;
 using Business.Features.CQRS.Auth.Logout;
+using Business.Features.CQRS.Dashboard.Profile.Query;
 using Core.Entities.Concrete.OzlukEntities;
 using Entities.Concrete.OzlukEntities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebAPI.Controllers.Base;
 using WebAPI.Filters;
 
@@ -34,35 +36,35 @@ namespace WebAPI.Controllers.Auth
         //}
 
         // Email doğrulama
-        [HttpGet("verify-email")]
-        [RejectAuthorizationHeader]
-        public IActionResult VerifyEmail()
-        {
-            return Ok();
-        }
+        //[HttpGet("verify-email")]
+        //[RejectAuthorizationHeader]
+        //public IActionResult VerifyEmail()
+        //{
+        //    return Ok();
+        //}
 
         // Parola kurtarma isteği
-        [HttpPost("forgot-password")]
-        [RejectAuthorizationHeader]
-        public IActionResult ForgotPassword()
-        {
-            return Ok();
-        }
+        //[HttpPost("forgot-password")]
+        //[RejectAuthorizationHeader]
+        //public IActionResult ForgotPassword()
+        //{
+        //    return Ok();
+        //}
 
         // Şifre sıfırlama isteği
-        [HttpPost("reset-password")]
-        public IActionResult ResetPassword()
-        {
-            return Ok();
-        }
+        //[HttpPost("reset-password")]
+        //public IActionResult ResetPassword()
+        //{
+        //    return Ok();
+        //}
 
         // Şifre değiştirme
-        [HttpPost("change-password")]
-        [Authorize]
-        public IActionResult ChangePassword()
-        {
-            return Ok();
-        }
+        //[HttpPost("change-password")]
+        //[Authorize]
+        //public IActionResult ChangePassword()
+        //{
+        //    return Ok();
+        //}
 
         // Giriş yapma
         [HttpPost("login")]
@@ -75,9 +77,9 @@ namespace WebAPI.Controllers.Auth
         // Çıkış yapma
         [HttpPost("logout")]
         [Authorize]
-        public IActionResult Logout([FromHeader(Name = "Authorization")] LogoutCommand command)
+        public async Task<IActionResult> Logout([FromHeader(Name = "Authorization")] LogoutCommand command)
         {
-            return Ok();
+            return await SendCommand(command);
         }
 
         // Token yenileme
@@ -89,19 +91,19 @@ namespace WebAPI.Controllers.Auth
         }
 
         // Kullanıcı profili Görüntüleme
-        [HttpGet("profile")]
-        [Authorize]
-        public IActionResult GetProfile()
-        {
-            return Ok();
-        }
+        //[HttpGet("profile")]
+        //[Authorize]
+        //public async Task<IActionResult> GetProfile([FromHeader(Name = "Authorization")] ProfileQuery query)
+        //{
+        //    return await SendQuery(query);
+        //}
 
         // Kullanıcı profili Güncelleme
-        [HttpPost("profile")]
-        [Authorize]
-        public IActionResult UpdateProfile([FromBody] Kullanici a, [FromQuery] int b, [FromHeader] int c)
-        {
-            return Ok();
-        }
+        //[HttpPost("profile")]
+        //[Authorize]
+        //public IActionResult UpdateProfile([FromHeader(Name = "Authorization")] ProfileCommand command)
+        //{
+        //    return Ok();
+        //}
     }
 }

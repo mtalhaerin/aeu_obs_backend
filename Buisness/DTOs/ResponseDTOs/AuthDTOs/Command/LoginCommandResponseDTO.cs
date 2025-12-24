@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.DTOs.ResponseDTOs.AuthDTOs
+namespace Business.DTOs.ResponseDTOs.AuthDTOs.Command
 {
-    public class LoginResponseDTO : ResponseDTOBase
+    public class LoginCommandResponseDTO : CommandResponseDTOBase
     {
         public string? AccessToken { get; set; } = null;
     }

@@ -64,13 +64,13 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
             return new List<string>();
         }
 
-        public Guid? ValidateToken(string token)
+        public Guid ValidateToken(string token)
         {
             if (_memoryCache.TryGetValue(token, out Guid userUuid))
             {
                 return userUuid;
             }
-            return null; // Token yok veya süresi dolmuş
+            return Guid.Empty; // Token yok veya süresi dolmuş
         }
 
         // --- Private Yardımcı Metotlar (Listeyi Yönetmek İçin) ---

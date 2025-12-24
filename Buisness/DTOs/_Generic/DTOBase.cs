@@ -24,4 +24,12 @@
     public abstract class ResponseDTOBase : DTOBase, IResponseDTOBase
     {
     }
+
+    public abstract class CommandResponseDTOBase : ResponseDTOBase, ICommandResponseDTOBase
+    {
+    }
+
+    public abstract class QueryResponseDTOBase : ResponseDTOBase, IQueryResponseDTOBase
+    {
+    }
 }

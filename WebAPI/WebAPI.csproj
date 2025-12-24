@@ -24,9 +24,4 @@
 		<ProjectReference Include="..\Entities\Entities.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Controllers\Fakulte\" />
-	  <Folder Include="Controllers\Ozluk\" />
-	</ItemGroup>
-
 </Project>

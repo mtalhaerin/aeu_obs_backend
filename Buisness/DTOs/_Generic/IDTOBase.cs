@@ -30,4 +30,14 @@ namespace Business.DTOs._Generic
     {
         // Marker interface for response DTOs
     }
+
+    public interface ICommandResponseDTOBase : IResponseDTOBase
+    {
+        // Marker interface for command response DTOs
+    }
+
+    public interface IQueryResponseDTOBase : IResponseDTOBase
+    {
+        // Marker interface for query response DTOs
+    }
 }

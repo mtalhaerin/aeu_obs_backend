@@ -1,5 +1,5 @@
 ﻿using Business.Concrete;
-using Business.DTOs.ResponseDTOs.AuthDTOs;
+using Business.DTOs.ResponseDTOs.AuthDTOs.Command;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
@@ -20,19 +20,19 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Auth.Logout
 {
-    public class LogoutCommand : ICommand<BaseResponse<LogoutResponseDTO>>
+    public class LogoutCommand : ICommand<BaseResponse<LogoutCommandResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
     }
 
-    public class LogoutHandler : ICommandHandler<LogoutCommand, BaseResponse<LogoutResponseDTO>>
+    public class LogoutCommandHandler : ICommandHandler<LogoutCommand, BaseResponse<LogoutCommandResponseDTO>>
     {
         private readonly IGenericHelper _genericHelper;
         private readonly ITokenHelper _tokenHelper;
         private readonly ITokenCacheManager _tokenCacheManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LogoutHandler(
+        public LogoutCommandHandler(
             IGenericHelper genericHelper,
             ITokenHelper tokenHelper,
             ITokenCacheManager tokenCacheManager)
@@ -42,30 +42,30 @@ namespace Business.Features.CQRS.Auth.Logout
             _tokenCacheManager = tokenCacheManager;
         }
 
-        public async Task<BaseResponse<LogoutResponseDTO>> Handle(LogoutCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<LogoutCommandResponseDTO>> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var token = _genericHelper.GetAccessTokenFromHeader();
                 if (string.IsNullOrEmpty(token))
                 {
-                    return BaseResponse<LogoutResponseDTO>.Failure("Token bulunamadı", statusCode: 400);
+                    return BaseResponse<LogoutCommandResponseDTO>.Failure("Token bulunamadı", statusCode: 400);
                 }
 
-                Guid? userUuid = _tokenCacheManager.ValidateToken(token);
-                if (userUuid == null)
+                Guid userUuid = _tokenCacheManager.ValidateToken(token);
+                if (userUuid == Guid.Empty)
                 {
-                    return BaseResponse<LogoutResponseDTO>.Failure("Token geçersiz veya süresi dolmuş", statusCode: 401);
+                    return BaseResponse<LogoutCommandResponseDTO>.Failure("Token geçersiz veya süresi dolmuş", statusCode: 401);
                 }
 
                 _tokenCacheManager.RemoveToken(token);
 
-                var LogoutResponse = new LogoutResponseDTO
+                var LogoutResponse = new LogoutCommandResponseDTO
                 {
-                    UserUuid = userUuid.Value,
+                    UserUuid = userUuid,
                 };
 
-                return BaseResponse<LogoutResponseDTO>.Success(LogoutResponse, "Başarıyla çıkış yapıldı", 200);
+                return BaseResponse<LogoutCommandResponseDTO>.Success(LogoutResponse, "Başarıyla çıkış yapıldı", 200);
             }
             catch (Exception)
             {

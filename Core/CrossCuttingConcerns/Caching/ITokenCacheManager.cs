@@ -17,7 +17,7 @@ namespace Core.CrossCuttingConcerns.Caching
         List<string> GetActiveTokens(Guid userUuid);
 
         // Token geçerli mi diye bakar, geçerliyse UserId döner
-        Guid? ValidateToken(string token);
+        Guid ValidateToken(string token);
 
         bool IsTokenActive(string token);
         bool IsTokenInactive(string token);
