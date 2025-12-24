@@ -52,7 +52,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql("server=100.64.207.39;database=aeu_obs;user=root;password=1234",
+            optionsBuilder.UseMySql("server=100.64.207.39;database=aeu_obs;user=mustafa;password=Trabzon1967.Trabzon1967.",
                     new MySqlServerVersion(new Version(8, 0, 44)));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
