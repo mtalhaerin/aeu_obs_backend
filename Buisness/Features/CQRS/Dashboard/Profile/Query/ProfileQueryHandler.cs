@@ -1,5 +1,6 @@
 ﻿using Business.Concrete;
 using Business.Concrete.OzlukManagers;
+using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
@@ -19,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Dashboard.Profile.Query
 {
-    public class ProfileQuery : IQuery<BaseResponse<ProfileQueryResponseDTO>>
+    public class ProfileQuery : IQuery<BaseResponse<ProfileQueryResponseDTO>>, ISecureRequest
     {
         public string? Authorization { get; set; } = null;
     }
@@ -27,6 +28,7 @@ namespace Business.Features.CQRS.Dashboard.Profile.Query
     public class ProfileQueryHandler : IQueryHandler<ProfileQuery, BaseResponse<ProfileQueryResponseDTO>>
     {
         private readonly IGenericHelper _genericHelper;
+        private readonly IUserContext _userContext;
         private readonly ITokenHelper _tokenHelper;
         private readonly ITokenCacheManager _tokenCacheManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -35,12 +37,14 @@ namespace Business.Features.CQRS.Dashboard.Profile.Query
 
         public ProfileQueryHandler(
             IGenericHelper genericHelper,
+            IUserContext userContext,
             ITokenHelper tokenHelper,
             ITokenCacheManager tokenCacheManager,
             IKullaniciService kullaniciService,
             IYetkiService yetkiService)
         {
             _genericHelper = genericHelper;
+            _userContext = userContext;
             _tokenHelper = tokenHelper;
             _tokenCacheManager = tokenCacheManager;
             _kullaniciService = kullaniciService;
@@ -51,33 +55,18 @@ namespace Business.Features.CQRS.Dashboard.Profile.Query
         {
             try
             {
-                var token = _genericHelper.GetAccessTokenFromHeader();
-                if (string.IsNullOrEmpty(token))
-                {
-                    return BaseResponse<ProfileQueryResponseDTO>.Failure("Token bulunamadı", statusCode: 400);
-                }
-
-                Guid userUuid = _tokenCacheManager.ValidateToken(token);
-                if (userUuid == Guid.Empty)
-                {
-                    return BaseResponse<ProfileQueryResponseDTO>.Failure("Token geçersiz veya süresi dolmuş", statusCode: 401);
-                }
-
-                IDataResult<Kullanici?> kullanici = await _kullaniciService.GetByUuidAsync(userUuid);
-                if (!kullanici.Success)
-                {
-                    return BaseResponse<ProfileQueryResponseDTO>.Failure("Kullanıcı bulunamadı", statusCode: 404);
-                }
+                string token = _userContext.Token;
+                Kullanici kullanici = _userContext.CurrentUser;
 
                 var profileResponse = new ProfileQueryResponseDTO
                 {
-                    KullaniciUuid = kullanici.Data!.KullaniciUuid,
-                    KullaniciTipi = kullanici.Data.KullaniciTipi,
-                    Ad = kullanici.Data.Ad,
-                    OrtaAd = kullanici.Data.OrtaAd,
-                    Soyad = kullanici.Data.Soyad,
-                    KurumEposta = kullanici.Data.KurumEposta,
-                    KurumSicilNo = kullanici.Data.KurumSicilNo,
+                    KullaniciUuid = kullanici.KullaniciUuid,
+                    KullaniciTipi = kullanici.KullaniciTipi,
+                    Ad = kullanici.Ad,
+                    OrtaAd = kullanici.OrtaAd,
+                    Soyad = kullanici.Soyad,
+                    KurumEposta = kullanici.KurumEposta,
+                    KurumSicilNo = kullanici.KurumSicilNo,
                 };
 
                 return BaseResponse<ProfileQueryResponseDTO>.Success(profileResponse, "Kullanıcı profili başarıyla getirildi", 200);

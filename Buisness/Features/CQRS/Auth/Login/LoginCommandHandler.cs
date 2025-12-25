@@ -10,6 +10,7 @@ using Core.Entities.Concrete.YetkiEntities;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
+using Entities.Concrete.OzlukEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,14 +62,22 @@ namespace Business.Features.CQRS.Auth.Login
                     return BaseResponse<LoginCommandResponseDTO>.Failure("Parola hatalı", statusCode: 401);
                 }
 
-                IDataResult<IEnumerable<KullaniciIslemYetkisi>>? islemYetkileri = await _yetkiService.GetKullaniciYetkileriAsync(kullanici.Data.KullaniciUuid);
+                //IDataResult<IEnumerable<KullaniciIslemYetkisi>>? islemYetkileri = await _yetkiService.GetKullaniciYetkileriAsync(kullanici.Data.KullaniciUuid);
 
-                AccessToken token = _tokenHelper.CreateToken(kullanici.Data, islemYetkileri.Data);
+                AccessToken token = _tokenHelper.CreateToken(kullanici.Data, null);
                 _tokenCacheManager.RegisterToken(token.Token, kullanici.Data.KullaniciUuid, token.ExpireInMinutes);
 
                 var loginResponse = new LoginCommandResponseDTO
                 {
-                    AccessToken = token.Token
+                    AccessToken = token.Token,
+                    UserType = kullanici.Data.KullaniciTipi,
+                    UserName = $"{kullanici.Data.KurumEposta.Substring(0, kullanici.Data.KurumEposta.IndexOf('@'))}",
+                    GivenName = kullanici.Data.Ad,
+                    MiddleName = kullanici.Data.OrtaAd,
+                    Surname = kullanici.Data.Soyad,
+                    InstitutionEmail = kullanici.Data.KurumEposta,
+                    InstitutionRegistrationNumber = kullanici.Data.KurumSicilNo
+
                 };
 
                 return BaseResponse<LoginCommandResponseDTO>.Success(loginResponse, "Giriş başarılı", 200);

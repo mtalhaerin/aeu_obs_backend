@@ -12,6 +12,7 @@ namespace Business.Concrete.OzlukManagers
 {
     public interface ITelefonService
     {
+        Task<IDataResult<Telefon>> GetUserTelefonByUuidAsync(Guid kullaniciUuid, Guid? TeelfonUuid);
         Task<IDataResult<IEnumerable<Telefon>>> GetUserTelefonsAsync(Guid kullaniciUuid);
     }
     public class TelefonManager : ITelefonService
@@ -21,6 +22,16 @@ namespace Business.Concrete.OzlukManagers
         public TelefonManager(ITelefonDal telefonDal)
         {
             _telefonDal = telefonDal;
+        }
+
+        public async Task<IDataResult<Telefon>> GetUserTelefonByUuidAsync(Guid kullaniciUuid, Guid? telefonUuid)
+        {
+            if (telefonUuid == Guid.Empty || telefonUuid == null)
+                return new ErrorDataResult<Telefon>(null!, "Geçersiz Telefon UUID'si.");
+            Telefon? result = await _telefonDal.GetAsync(t => t.TelefonUuid == telefonUuid && t.KullaniciUuid == kullaniciUuid);
+            if (result == null)
+                return new ErrorDataResult<Telefon>(null!, "Telefon bulunamadı.");
+            return new SuccessDataResult<Telefon>(result, "Telefon başarıyla getirildi.");
         }
 
         public async Task<IDataResult<IEnumerable<Telefon>>> GetUserTelefonsAsync(Guid kullaniciUuid)

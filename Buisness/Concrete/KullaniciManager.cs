@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete.OzlukEntities;
+using Core.Utilities.Results;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.DataResults;
 using DataAccess.Concrete.EntityFramework.OzlukDals;
@@ -10,9 +11,10 @@ namespace Business.Concrete
 {
     public interface IKullaniciService
     {
-        Task<IDataResult<Kullanici?>> GetByUuid(Guid kullaniciUuid);
-        Task<IDataResult<Kullanici?>> GetByUuidAsync(Guid kullaniciUuid);
-        Task<IDataResult<Kullanici?>> GetByEmailAsync(string kurum_eposta);
+        Task<IDataResult<Kullanici>> GetByUuid(Guid kullaniciUuid);
+        Task<IDataResult<Kullanici>> UpdateKullaniciAsync(Kullanici kullanici);
+        Task<IDataResult<Kullanici>> GetByUuidAsync(Guid kullaniciUuid);
+        Task<IDataResult<Kullanici>> GetByEmailAsync(string kurum_eposta);
     }
 
     public class KullaniciManager : IKullaniciService
@@ -24,34 +26,45 @@ namespace Business.Concrete
             _kullaniciDal = kullaniciDal;
         }
 
-        public async Task<IDataResult<Kullanici?>> GetByUuid(Guid kullaniciUuid)
+        public async Task<IDataResult<Kullanici>> GetByUuid(Guid kullaniciUuid)
         {
             var result = _kullaniciDal.Get(k => k.KullaniciUuid == kullaniciUuid);
             if (result is null)
             {
-                return new DataResult<Kullanici?>(null, false); // or include message
+                return new DataResult<Kullanici>(null, false); // or include message
             }
-            return new DataResult<Kullanici?>(result, true);
+            return new DataResult<Kullanici>(result, true);
         }
 
-        public async Task<IDataResult<Kullanici?>> GetByUuidAsync(Guid kullaniciUuid)
+        public async Task<IDataResult<Kullanici>> GetByUuidAsync(Guid kullaniciUuid)
         {
             var result = await _kullaniciDal.GetAsync(k => k.KullaniciUuid == kullaniciUuid);
             if (result is null)
             {
-                return new DataResult<Kullanici?>(null, false); // or include message
+                return new DataResult<Kullanici>(null, false); // or include message
             }
-            return new DataResult<Kullanici?>(result, true);
+            return new DataResult<Kullanici>(result, true);
         }
 
-        public async Task<IDataResult<Kullanici?>> GetByEmailAsync(string kurum_eposta)
+        public async Task<IDataResult<Kullanici>> GetByEmailAsync(string kurum_eposta)
         {
             var result = await _kullaniciDal.GetAsync(k => k.KurumEposta == kurum_eposta);
             if (result is null)
             {
-                return new DataResult<Kullanici?>(null, false); // or include message
+                return new DataResult<Kullanici>(null, false); // or include message
             }
-            return new DataResult<Kullanici?>(result, true);
+            return new DataResult<Kullanici>(result, true);
+        }
+
+        public async Task<IDataResult<Kullanici>> UpdateKullaniciAsync(Kullanici kullanici)
+        {
+            await _kullaniciDal.UpdateAsync(kullanici);
+            var result = await _kullaniciDal.GetAsync(k => k.KullaniciUuid == kullanici.KullaniciUuid);
+            if (result is null)
+            {
+                return new DataResult<Kullanici>(null, false); // or include message
+            }
+            return new DataResult<Kullanici>(result, true);
         }
     }
 }

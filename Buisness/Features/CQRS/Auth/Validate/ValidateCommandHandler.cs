@@ -1,7 +1,6 @@
 ﻿using Business.Concrete;
 using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.AuthDTOs.Command;
-using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
@@ -10,23 +9,21 @@ using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
 using Core.Entities.Concrete.YetkiEntities;
 using Core.Utilities.Results.Abstract;
-using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Features.CQRS.Auth.Refresh
+namespace Business.Features.CQRS.Auth.Validate
 {
-    public class RefreshCommand : ICommand<BaseResponse<RefreshCommandResponseDTO>>
+    public class ValidateCommand : ICommand<BaseResponse<ValidateCommandResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
     }
 
-    public class RefreshCommandHandler : ICommandHandler<RefreshCommand, BaseResponse<RefreshCommandResponseDTO>>
+    public class ValidateCommandHandler : ICommandHandler<ValidateCommand, BaseResponse<ValidateCommandResponseDTO>>
     {
         private readonly IGenericHelper _genericHelper;
         private readonly IUserContext _userContext;
@@ -35,7 +32,7 @@ namespace Business.Features.CQRS.Auth.Refresh
         private readonly ITokenHelper _tokenHelper;
         private readonly ITokenCacheManager _tokenCacheManager;
 
-        public RefreshCommandHandler(
+        public ValidateCommandHandler(
             IGenericHelper genericHelper,
             IUserContext userContext,
             IKullaniciService kullaniciService,
@@ -51,27 +48,20 @@ namespace Business.Features.CQRS.Auth.Refresh
             _tokenCacheManager = tokenCacheManager;
         }
 
-        public async Task<BaseResponse<RefreshCommandResponseDTO>> Handle(RefreshCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<ValidateCommandResponseDTO>> Handle(ValidateCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 string token = _userContext.Token;
-                Kullanici kullanici= _userContext.CurrentUser;
+                Kullanici kullanici = _userContext.CurrentUser;
 
 
-                _tokenCacheManager.BlacklistToken(token);
-
-                //IDataResult<IEnumerable<KullaniciIslemYetkisi>>? islemYetkileri = await _yetkiService.GetKullaniciYetkileriAsync(kullanici.Data.KullaniciUuid);
-                AccessToken newAccessToken = _tokenHelper.CreateToken(kullanici, null);
-
-                _tokenCacheManager.RegisterToken(newAccessToken.Token, kullanici.KullaniciUuid, newAccessToken.ExpireInMinutes);
-
-                RefreshCommandResponseDTO refreshResponse = new()
+                ValidateCommandResponseDTO refreshResponse = new()
                 {
-                    AccessToken = newAccessToken.Token,
+                    IsValid = true,
                 };
 
-                return BaseResponse<RefreshCommandResponseDTO>.Success(refreshResponse, "Giriş başarılı", 200);
+                return BaseResponse<ValidateCommandResponseDTO>.Success(refreshResponse, "Token geçerli", 200);
             }
             catch (Exception)
             {

@@ -1,5 +1,4 @@
 ﻿using Business.Concrete;
-using Business.Features.CQRS.Dashboard.Profile.Command;
 using Business.Features.CQRS.Dashboard.Profile.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,30 +13,18 @@ namespace WebAPI.Controllers.Dashoard
     [Route("api/[controller]")]
     public class DashboardController : GenericController
     {
-        private readonly IKullaniciService _kullaniciService;
-
         public DashboardController(
             IMediator mediator,
-            ILogger<DashboardController> logger,
-            IKullaniciService kullaniciService) : base(mediator, logger)
+            ILogger<DashboardController> logger): base(mediator, logger)
         {
-            _kullaniciService = kullaniciService;
         }
 
 
         [HttpGet("profile")]
         [Authorize]
-        public async Task<IActionResult> GetProfile([FromHeader(Name = "Authorization")] ProfileQuery query)
+        public async Task<IActionResult> GetProfile([FromHeader(Name = "Authorization")] ProfileQuery command)
         {
-            return await SendQuery(query);
-        }
-
-        //Kullanıcı profili Güncelleme
-        [HttpPut("profile")]
-        [Authorize]
-        public async Task<IActionResult> UpdateProfile([FromHeader(Name = "Authorization")] ProfileUpdateCommand command)
-        {
-            return await SendCommand(command);
+            return await SendQuery(command);
         }
     }
 }

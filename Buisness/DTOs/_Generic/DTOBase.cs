@@ -14,7 +14,7 @@
     /// <summary>
     /// Abstract base class for request DTOs.
     /// </summary>
-    public abstract class RequestDTOoBase : DTOBase, IRequestDTOBase
+    public abstract class RequestDTOBase : DTOBase, IRequestDTOBase
     {
     }
 
@@ -22,6 +22,14 @@
     /// Abstract base class for response DTOs.
     /// </summary>
     public abstract class ResponseDTOBase : DTOBase, IResponseDTOBase
+    {
+    }
+
+    public abstract class CommandRequestDTOBase : RequestDTOBase, ICommandResponseDTOBase
+    {
+    }
+
+    public abstract class QueryRequestDTOBase : RequestDTOBase, IQueryResponseDTOBase
     {
     }
 

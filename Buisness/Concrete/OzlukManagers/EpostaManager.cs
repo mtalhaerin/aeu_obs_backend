@@ -7,6 +7,7 @@ namespace Business.Concrete.OzlukManagers
 {
     public interface IEpostaService
     {
+        Task<IDataResult<Eposta>> GetUserEmailByUuidAsync(Guid kullaniciUuid, Guid? epostaUuid);
         Task<IDataResult<IEnumerable<Eposta>>> GetUserEmailsAsync(Guid kullaniciUuid);
     }
     public class EpostaManager : IEpostaService
@@ -16,6 +17,17 @@ namespace Business.Concrete.OzlukManagers
         public EpostaManager(IEpostaDal epostaDal)
         {
             _epostaDal = epostaDal;
+        }
+
+        public async Task<IDataResult<Eposta>> GetUserEmailByUuidAsync(Guid kullaniciUuid, Guid? epostaUuid)
+        {
+            if (epostaUuid == Guid.Empty || epostaUuid == null)
+                return new ErrorDataResult<Eposta>(null, "Geçersiz eposta UUID'si.");
+
+            Eposta? result = await _epostaDal.GetAsync(e => e.EpostaUuid == epostaUuid && e.KullaniciUuid == kullaniciUuid);
+            if (result == null)
+                return new ErrorDataResult<Eposta>(null, "Eposta bulunamadı.");
+            return new SuccessDataResult<Eposta>(result, "Eposta başarıyla getirildi.");
         }
 
         public async Task<IDataResult<IEnumerable<Eposta>>> GetUserEmailsAsync(Guid kullaniciUuid)

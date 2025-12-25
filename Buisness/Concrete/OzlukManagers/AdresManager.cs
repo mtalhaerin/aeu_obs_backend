@@ -12,6 +12,7 @@ namespace Business.Concrete.OzlukManagers
 {
     public interface IAdresService
     {
+        Task<IDataResult<Adres>> GetUserAddresByUuidAsync(Guid kullaniciUuid, Guid? adresUuid);
         Task<IDataResult<IEnumerable<Adres>>> GetUserAddresesAsync(Guid kullaniciUuid);
     }
     public class AdresManager : IAdresService
@@ -21,6 +22,16 @@ namespace Business.Concrete.OzlukManagers
         public AdresManager(IAdresDal adresDal)
         {
             _adresDal = adresDal;
+        }
+
+        public async Task<IDataResult<Adres>> GetUserAddresByUuidAsync(Guid kullaniciUuid, Guid? adresUuid)
+        {
+            if (adresUuid == Guid.Empty || adresUuid == null)
+                return new ErrorDataResult<Adres>(null!, "Geçersiz adres UUID'si.");
+            Adres? result = await _adresDal.GetAsync(a => a.AdresUuid == adresUuid && a.KullaniciUuid == kullaniciUuid);
+            if (result == null)
+                return new ErrorDataResult<Adres>(null!, "Adres bulunamadı.");
+            return new SuccessDataResult<Adres>(result, "Adres başarıyla getirildi.");
         }
 
         public async Task<IDataResult<IEnumerable<Adres>>> GetUserAddresesAsync(Guid kullaniciUuid)

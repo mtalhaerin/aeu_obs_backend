@@ -10,5 +10,5 @@ namespace Business.DTOs.ResponseDTOs.AuthDTOs.Command
     public class RefreshCommandResponseDTO : CommandResponseDTOBase
     {
         public string? AccessToken { get; set; } = null;
-    }
+    }    
 }

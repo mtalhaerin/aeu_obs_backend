@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Behaviors;
+using Business.ContextCarrier;
 using Business.Features.CQRS.Auth.Login;
 using Business.ValidationRules.FluentValidation;
 using FluentValidation;
@@ -46,6 +47,7 @@ namespace Business.Extensions
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             });
 
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
@@ -83,6 +85,7 @@ namespace Business.Extensions
         private static void AddCoreBusinessServices(IServiceCollection services, IConfiguration? configuration)
         {
             // Caching & JWT
+            services.AddScoped<IUserContext, UserContext>();
             //services.AddScoped<ICacheService, UnifeCacheService>();
             //services.AddScoped<ISessionJwtService, SessionJwtService>();
             //services.AddSingleton<IPasswordUtility, PasswordUtility>();

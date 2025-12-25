@@ -1,0 +1,15 @@
+﻿using Business.DTOs._Generic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs
+{
+    public class OzlukPhoneQueryRequestDTO : QueryRequestDTOBase
+    {
+        public string? Token { get; set; } = null;
+        public Guid? TelefonUuid { get; set; } = null;
+    }
+}

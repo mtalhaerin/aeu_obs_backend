@@ -197,15 +197,15 @@ namespace WebAPI
                 });
 
                 // Tarayıcıyı Açma (Opsiyonel)
-                try
-                {
-                    var url = $"http://{hostSetting}:{portSetting}/scalar/v1";
-                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-                    {
-                        Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
-                    }
-                }
-                catch { }
+                //try
+                //{
+                //    var url = $"http://{hostSetting}:{portSetting}/scalar/v1";
+                //    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                //    {
+                //        Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+                //    }
+                //}
+                //catch { }
             }
 
             app.ConfigureCustomExceptionMiddleware();

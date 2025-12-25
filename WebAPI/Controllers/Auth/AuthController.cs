@@ -17,14 +17,10 @@ namespace WebAPI.Controllers.Auth
     [Route("api/[controller]")]
     public class AuthController : GenericController
     {
-        private readonly IKullaniciService _kullaniciService;
-
         public AuthController(
             IMediator mediator,
-            ILogger<AuthController> logger,
-            IKullaniciService kullaniciService) : base(mediator, logger)
+            ILogger<AuthController> logger) : base(mediator, logger)
         {
-            _kullaniciService = kullaniciService;
         }
 
         // Kayıt olma
@@ -93,9 +89,9 @@ namespace WebAPI.Controllers.Auth
         // Token validating
         [HttpPost("validate")]
         [Authorize]
-        public IActionResult Refresh()
+        public async Task<IActionResult> Validate([FromHeader(Name = "Authorization")] LogoutCommand command)
         {
-            return Ok();
+            return await SendCommand(command);
         }
     }
 }
