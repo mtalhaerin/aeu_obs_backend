@@ -30,7 +30,6 @@ namespace Business.Features.CQRS.Auth.Refresh
     public class RefreshCommandHandler : ICommandHandler<RefreshCommand, BaseResponse<RefreshCommandResponseDTO>>
     {
         private readonly IGenericHelper _genericHelper;
-        private readonly IUserContext _userContext;
         private readonly IKullaniciService _kullaniciService;
         private readonly IYetkiService _yetkiService;
         private readonly ITokenHelper _tokenHelper;
