@@ -9,7 +9,6 @@ namespace Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs
 {
     public class OzlukPhoneQueryRequestDTO : QueryRequestDTOBase
     {
-        public string? Token { get; set; } = null;
         public Guid? TelefonUuid { get; set; } = null;
     }
 }

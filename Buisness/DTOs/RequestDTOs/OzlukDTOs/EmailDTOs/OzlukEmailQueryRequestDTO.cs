@@ -9,7 +9,6 @@ namespace Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs
 {
     public class OzlukEmailQueryRequestDTO : QueryRequestDTOBase
     {
-        public string? Token { get; set; } = null;
         public Guid? EmailUuid { get; set; } = null;
     }
 }
