@@ -23,7 +23,6 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
     public class OzlukAdresesQuery : IQuery<BaseResponse<OzlukAdresesQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
-        public Guid? AddressUuid { get; set; } = null;
     }
 
     public class OzlukAdresesQueryHandler : IQueryHandler<OzlukAdresesQuery, BaseResponse<OzlukAdresesQueryResponseDTO>>
@@ -48,11 +47,6 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
             {
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
-
-                if (request.AddressUuid == null || request.AddressUuid == Guid.Empty)
-                {
-                    return BaseResponse<OzlukAdresesQueryResponseDTO>.Failure("Adres UUID'si belirtilmemiş", statusCode: 400);
-                }
                 
                 IDataResult<IEnumerable<Adres>> adreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
                 

@@ -51,6 +51,11 @@ namespace Business.ValidationRules.Commons
             if (string.IsNullOrEmpty(uuid)) return true;
             return Guid.TryParse(uuid, out _);
         }
+        public static bool BeAValidUuid(Guid? uuid)
+        {
+            if (!uuid.HasValue && uuid != Guid.Empty) return true;
+            return false;
+        }
 
         #endregion
 
