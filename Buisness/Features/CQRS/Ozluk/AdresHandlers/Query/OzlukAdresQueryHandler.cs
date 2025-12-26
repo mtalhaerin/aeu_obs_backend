@@ -65,7 +65,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
                 var profileResponse = new OzlukAdresQueryResponseDTO
                 {
                     AdresUuid = adres.Data.AdresUuid,
-                    KullaniciUuid = adres.Data.KullaniciUuid,
+                    KullaniciUuid = adres.Data.KullaniciUuid, 
                     Sokak = adres.Data.Sokak,
                     Sehir = adres.Data.Sehir,
                     Ilce = adres.Data.Ilce,
