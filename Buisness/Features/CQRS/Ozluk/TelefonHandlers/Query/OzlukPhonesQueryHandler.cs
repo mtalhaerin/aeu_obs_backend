@@ -2,10 +2,11 @@
 using Business.Concrete.OzlukManagers;
 using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
-using Business.DTOs.ResponseDTOs.OzlukDTOs;
+using Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukQueryDTOs;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
+using Business.Features.CQRS._Generic.Secured;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
 using Core.Utilities.Results.Abstract;
@@ -20,10 +21,9 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
 {
-    public class OzlukPhonesQuery : IQuery<BaseResponse<OzlukPhonesQueryResponseDTO>>
+    public class OzlukPhonesQuery : ISecuredQuery<BaseResponse<OzlukPhonesQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
-        public Guid? AddressUuid { get; set; } = null;
     }
 
     public class OzlukPhonesQueryHandler : IQueryHandler<OzlukPhonesQuery, BaseResponse<OzlukPhonesQueryResponseDTO>>
@@ -48,11 +48,6 @@ namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
             {
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
-
-                if (request.AddressUuid == null || request.AddressUuid == Guid.Empty)
-                {
-                    return BaseResponse<OzlukPhonesQueryResponseDTO>.Failure("Telefon UUID'si belirtilmemiş", statusCode: 400);
-                }
                 
                 IDataResult<IEnumerable<Telefon>> telefonlar = await _telefonService.GetUserTelefonsAsync(kullanici.KullaniciUuid);
                 
@@ -65,6 +60,7 @@ namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
                     Telefonlar = telefonlar.Data.Select(t => new OzlukPhoneQueryResponseDTO
                     {
                         TelefonUuid = t.TelefonUuid,
+                        KullaniciUuid = t.KullaniciUuid,
                         UlkeKodu = t.UlkeKodu,
                         TelefonNo = t.TelefonNo,
                         TelefonTipi = t.TelefonTipi,

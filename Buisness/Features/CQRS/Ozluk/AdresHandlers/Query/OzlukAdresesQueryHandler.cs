@@ -2,7 +2,6 @@
 using Business.Concrete.OzlukManagers;
 using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
-using Business.DTOs.ResponseDTOs.OzlukDTOs;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
@@ -17,10 +16,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.Features.CQRS._Generic.Secured;
+using Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukQueryDTOs;
 
 namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
 {
-    public class OzlukAdresesQuery : IQuery<BaseResponse<OzlukAdresesQueryResponseDTO>>
+    public class OzlukAdresesQuery : ISecuredQuery<BaseResponse<OzlukAdresesQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
     }
@@ -59,6 +60,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
                     Addreses =  adreses.Data.Select(adres => new OzlukAdresQueryResponseDTO
                     {
                         AdresUuid = adres.AdresUuid,
+                        KullaniciUuid = adres.KullaniciUuid,
                         Sokak = adres.Sokak,
                         Sehir = adres.Sehir,
                         Ilce = adres.Ilce,

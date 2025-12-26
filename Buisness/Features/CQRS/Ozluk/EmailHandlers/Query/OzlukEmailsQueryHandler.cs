@@ -2,10 +2,11 @@
 using Business.Concrete.OzlukManagers;
 using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
-using Business.DTOs.ResponseDTOs.OzlukDTOs;
+using Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukQueryDTOs;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
+using Business.Features.CQRS._Generic.Secured;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
 using Core.Utilities.Results.Abstract;
@@ -20,10 +21,9 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Ozluk.EmailHandlers.Query
 {
-    public class OzlukEmailsQuery : IQuery<BaseResponse<OzlukEmailsQueryResponseDTO>>
+    public class OzlukEmailsQuery : ISecuredQuery<BaseResponse<OzlukEmailsQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
-        public Guid? EmailUuid { get; set; } = null;
     }
 
     public class OzlukEmailsQueryHandler : IQueryHandler<OzlukEmailsQuery, BaseResponse<OzlukEmailsQueryResponseDTO>>
@@ -48,11 +48,6 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Query
             {
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
-
-                if (request.EmailUuid == null || request.EmailUuid == Guid.Empty)
-                {
-                    return BaseResponse<OzlukEmailsQueryResponseDTO>.Failure("Email UUID'si belirtilmemiş", statusCode: 400);
-                }
                 
                 IDataResult<IEnumerable<Eposta>> Emails = await _epostaService.GetUserEmailsAsync(kullanici.KullaniciUuid);
                 

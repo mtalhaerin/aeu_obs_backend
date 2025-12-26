@@ -36,7 +36,7 @@ namespace Business.Concrete.OzlukManagers
 
         public async Task<IDataResult<IEnumerable<Telefon>>> GetUserTelefonsAsync(Guid kullaniciUuid)
         {
-            if (kullaniciUuid != Guid.Empty)
+            if (kullaniciUuid == Guid.Empty)
                 return new ErrorDataResult<IEnumerable<Telefon>>(new List<Telefon>(), "Geçersiz kullanıcı UUID'si.");
 
             IEnumerable<Telefon> result = await _telefonDal.GetAllAsync(t => t.KullaniciUuid == kullaniciUuid);

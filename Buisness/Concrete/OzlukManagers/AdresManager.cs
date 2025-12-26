@@ -36,7 +36,7 @@ namespace Business.Concrete.OzlukManagers
 
         public async Task<IDataResult<IEnumerable<Adres>>> GetUserAddresesAsync(Guid kullaniciUuid)
         {
-            if (kullaniciUuid != Guid.Empty)
+            if (kullaniciUuid == Guid.Empty)
                 return new ErrorDataResult<IEnumerable<Adres>>(new List<Adres>(), "Geçersiz kullanıcı UUID'si.");
 
             IEnumerable<Adres> result = await _adresDal.GetAllAsync(a => a.KullaniciUuid == kullaniciUuid);

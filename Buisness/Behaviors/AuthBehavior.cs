@@ -1,7 +1,7 @@
 ﻿using Business.Concrete;
 using Business.ContextCarrier;
-using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
+using Business.Features.CQRS._Generic.Secured;
 using Core.CrossCuttingConcerns.Caching;
 using MediatR;
 

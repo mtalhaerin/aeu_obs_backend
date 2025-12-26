@@ -235,7 +235,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliAdres");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Adresler_Kullanicilar");
+                entity.HasOne(e => e.Kullanici).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Adresler_Kullanicilar");
             });
 
             // epostalar
@@ -285,7 +285,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.HasIndex(e => e.EpostaAdresi).IsUnique().HasDatabaseName("UK_Epostalar_EpostaAdresi");
                 entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliEposta");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Epostalar_Kullanicilar");
+                entity.HasOne(e => e.Kullanici).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Epostalar_Kullanicilar");
             });
 
             // kullanicilar
@@ -342,7 +342,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.Property(e => e.ParolaTuz)
                       .HasColumnName("parola_tuz")
-                      .HasMaxLength(64)
+                      .HasMaxLength(255)
                       .IsRequired();
 
                 entity.Property(e => e.OlusturmaTarihi)
@@ -414,7 +414,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
                 entity.HasIndex(e => new { e.KullaniciUuid, e.TelefonNo }).IsUnique().HasDatabaseName("UK_Telefonlar_Kullanici_Telefon");
                 entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliTelefon");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Telefonlar_Kullanicilar");
+                entity.HasOne(e => e.Kullanici).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Telefonlar_Kullanicilar");
             });
 
         }
@@ -499,7 +499,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                entity.HasOne<Fakulte>().WithMany().HasForeignKey(e => e.FakulteUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AnaDallar_Fakulteler");
+                entity.HasOne(e => e.Fakulte).WithMany().HasForeignKey(e => e.FakulteUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AnaDallar_Fakulteler");
             });
 
             // bolumler
@@ -579,8 +579,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 entity.HasIndex(e => new { e.KullaniciUuid, e.BolumUuid }).IsUnique().HasDatabaseName("UK_AkademisyenBolumAtama_Kullanici_Bolum");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenBolumAtama_Kullanicilar");
-                entity.HasOne<Bolum>().WithMany().HasForeignKey(e => e.BolumUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenBolumAtama_Bolumler");
+                entity.HasOne(e => e.Akademisyen).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenBolumAtama_Kullanicilar");
+                entity.HasOne(e => e.Bolum).WithMany().HasForeignKey(e => e.BolumUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenBolumAtama_Bolumler");
             });
 
             // ogrenci_bolum_kayitlari
@@ -618,8 +618,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 entity.HasIndex(e => new { e.KullaniciUuid, e.BolumUuid }).IsUnique().HasDatabaseName("UK_OgrenciBolumKayit_Kullanici_Bolum");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciBolumKayit_Kullanicilar");
-                entity.HasOne<Bolum>().WithMany().HasForeignKey(e => e.BolumUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciBolumKayit_Bolumler");
+                entity.HasOne(e => e.Ogrenci).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciBolumKayit_Kullanicilar");
+                entity.HasOne(e => e.Bolum).WithMany().HasForeignKey(e => e.BolumUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciBolumKayit_Bolumler");
             });
         }
         private void ConfigureDersEntities(ModelBuilder modelBuilder)
@@ -659,8 +659,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 entity.HasIndex(e => new { e.AkademisyenUuid, e.DersUuid }).IsUnique().HasDatabaseName("UK_Akademisyen_Ders");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.AkademisyenUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Kullanicilar");
-                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Dersler");
+                entity.HasOne(e => e.Akademisyen).WithMany().HasForeignKey(e => e.AkademisyenUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Kullanicilar");
+                entity.HasOne(e => e.Ders).WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AkademisyenAtama_Dersler");
             });
 
             // dersler
@@ -758,8 +758,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 entity.HasIndex(e => new { e.SinavUuid, e.OgrenciUuid }).IsUnique().HasDatabaseName("UK_Notlar_Sinav_Ogrenci");
-                entity.HasOne<Sinav>().WithMany().HasForeignKey(e => e.SinavUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Sinavlar");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Kullanicilar");
+                entity.HasOne(e => e.Sinav).WithMany().HasForeignKey(e => e.SinavUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Sinavlar");
+                entity.HasOne(e => e.Ogrenci).WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Notlar_Kullanicilar");
             });
 
             // ogrenci_kayitlari
@@ -783,7 +783,14 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasColumnName("ders_uuid")
                       .HasMaxLength(36)
                       .IsRequired();
-
+                
+                // enum Durum default PASIF -> underlying int assumed 0
+                entity.Property(e => e.Durum)
+                      .HasColumnName("durum")
+                      .HasColumnType("ENUM('DEVAMEDIYOR','GECTI','KALDI')")
+                      .HasConversion<string>()
+                      .IsRequired()
+                      .HasDefaultValue(Durum.DEVAMEDIYOR);
                 entity.Property(e => e.OlusturmaTarihi)
                       .HasColumnName("olusturma_tarihi")
                       .HasColumnType("timestamp")
@@ -796,17 +803,11 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                // enum Durum default PASIF -> underlying int assumed 0
-                entity.Property(e => e.Durum)
-                      .HasColumnName("durum")
-                      .HasColumnType("ENUM('DEVAMEDIYOR','GECTI','KALDI')")
-                      .HasConversion<string>()
-                      .IsRequired()
-                      .HasDefaultValue(Durum.DEVAMEDIYOR);
+                
 
                 entity.HasIndex(e => new { e.OgrenciUuid, e.DersUuid }).IsUnique().HasDatabaseName("UK_Ogrenci_Ders");
-                entity.HasOne<Kullanici>().WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Kullanicilar");
-                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Dersler");
+                entity.HasOne(e => e.Ogrenci).WithMany().HasForeignKey(e => e.OgrenciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Kullanicilar");
+                entity.HasOne(e => e.Ders).WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_OgrenciKayit_Dersler");
             });
 
             // sinavlar
@@ -862,7 +863,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                entity.HasOne<Ders>().WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Sinavlar_Dersler");
+                entity.HasOne(e => e.Ders).WithMany().HasForeignKey(e => e.DersUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Sinavlar_Dersler");
             });
         }
 

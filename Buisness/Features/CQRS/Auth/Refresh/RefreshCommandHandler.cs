@@ -5,6 +5,7 @@ using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
+using Business.Features.CQRS._Generic.Secured;
 using Core.Buisiness.Features.CQRS;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Auth.Refresh
 {
-    public class RefreshCommand : ICommand<BaseResponse<RefreshCommandResponseDTO>>
+    public class RefreshCommand : ISecuredCommand<BaseResponse<RefreshCommandResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
     }

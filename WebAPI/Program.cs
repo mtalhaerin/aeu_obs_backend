@@ -135,10 +135,6 @@ namespace WebAPI
             // MediatR
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Business.Features.CQRS.Auth.Login.LoginCommandHandler).Assembly));
 
-            // Standart Servisler
-            builder.Services.AddScoped<IKullaniciService, KullaniciManager>();
-            builder.Services.AddScoped<IKullaniciDal, EFKullaniciDal>();
-
             // -------------------------------------------------------------------------
             // 3. JWT TOKEN VE AUTHENTICATION
             // -------------------------------------------------------------------------

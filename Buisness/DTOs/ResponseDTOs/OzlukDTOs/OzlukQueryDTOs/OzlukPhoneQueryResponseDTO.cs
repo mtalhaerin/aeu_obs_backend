@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.DTOs.ResponseDTOs.OzlukDTOs
+namespace Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukQueryDTOs
 {
     public class OzlukPhoneQueryResponseDTO : QueryResponseDTOBase
     {

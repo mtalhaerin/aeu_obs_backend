@@ -4,6 +4,7 @@ using Business.DTOs.ResponseDTOs.AuthDTOs.Command;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
+using Business.Features.CQRS._Generic.Secured;
 using Core.Buisiness.Features.CQRS;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Auth.Validate
 {
-    public class ValidateCommand : ICommand<BaseResponse<ValidateCommandResponseDTO>>
+    public class ValidateCommand : ISecuredCommand<BaseResponse<ValidateCommandResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
     }

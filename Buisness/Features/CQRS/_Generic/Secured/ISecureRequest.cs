@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Features.CQRS._Generic
+namespace Business.Features.CQRS._Generic.Secured
 {
     public interface ISecureRequest
     {
     }
+
 }

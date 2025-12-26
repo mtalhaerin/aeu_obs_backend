@@ -39,7 +39,7 @@ namespace WebAPI.Controllers.Ozluk
         // Multiple Addreses
         [HttpGet("addreses")]
         [Authorize]
-        public async Task<IActionResult> GetAddreses([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukAddresesQueryRequestDTO query)
+        public async Task<IActionResult> GetAddreses([FromHeader(Name = "Authorization")] string token)
         {
             return await SendQuery(new OzlukAdresesQuery
             {
@@ -62,7 +62,7 @@ namespace WebAPI.Controllers.Ozluk
 
         [HttpGet("emails")]
         [Authorize]
-        public async Task<IActionResult> GetEmails([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukEmailsQueryRequestDTO query)
+        public async Task<IActionResult> GetEmails([FromHeader(Name = "Authorization")] string token)
         {
             return await SendQuery(new OzlukEmailsQuery
             {
@@ -83,7 +83,7 @@ namespace WebAPI.Controllers.Ozluk
 
         [HttpGet("phones")]
         [Authorize]
-        public async Task<IActionResult> GetPhones([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukPhonesQueryRequestDTO command)
+        public async Task<IActionResult> GetPhones([FromHeader(Name = "Authorization")] string token)
         {
             return await SendQuery(new OzlukPhonesQuery
             {

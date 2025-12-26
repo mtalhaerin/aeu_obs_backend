@@ -2,10 +2,11 @@
 using Business.Concrete.OzlukManagers;
 using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
-using Business.DTOs.ResponseDTOs.OzlukDTOs;
+using Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukQueryDTOs;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
+using Business.Features.CQRS._Generic.Secured;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
 using Core.Utilities.Results.Abstract;
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
 {
-    public class OzlukPhoneQuery : IQuery<BaseResponse<OzlukPhoneQueryResponseDTO>>
+    public class OzlukPhoneQuery : ISecuredQuery<BaseResponse<OzlukPhoneQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
         public Guid? TelefonUuid { get; set; } = null;
