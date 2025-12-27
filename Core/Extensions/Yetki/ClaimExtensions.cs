@@ -52,7 +52,10 @@ namespace Core.Extensions.Yetki
             // ClaimTypes.NameIdentifier kullanırsan uzun URL gelir.
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, nameIdentifier));
         }
-
+        public static void AddIdentityType(this ICollection<Claim> claims, string identityType)
+        {
+            claims.Add(new Claim("identity_type", identityType));
+        }
         // 5. ROLES -> "role"
         public static void AddRoles(this ICollection<Claim> claims, string[] roles)
         {
