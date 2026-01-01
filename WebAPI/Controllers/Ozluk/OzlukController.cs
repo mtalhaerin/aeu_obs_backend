@@ -1,7 +1,7 @@
 ﻿using Business.Concrete;
-using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs;
-using Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs;
-using Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs;
+using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.QueryDTOs;
+using Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.QueryDTOs;
+using Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs.QueryDTOs;
 using Business.Features.CQRS.Ozluk.AdresHandlers.Query;
 using Business.Features.CQRS.Ozluk.EmailHandlers.Query;
 using Business.Features.CQRS.Ozluk.TelefonHandlers.Query;
@@ -24,9 +24,19 @@ namespace WebAPI.Controllers.Ozluk
         {
         }
 
+        #region Addres CRUD Operations
+        [HttpPost("addres")]
+        [Authorize]
+        [Tags("Ozluk: Address")]
+        public async Task<IActionResult> CreateAddres()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+
         // Single Addres
         [HttpGet("addres")]
         [Authorize]
+        [Tags("Ozluk: Address")]
         public async Task<IActionResult> GetAddres([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukAddresQueryRequestDTO query)
         {
             return await SendQuery(new OzlukAdresQuery
@@ -39,6 +49,7 @@ namespace WebAPI.Controllers.Ozluk
         // Multiple Addreses
         [HttpGet("addreses")]
         [Authorize]
+        [Tags("Ozluk: Address")]
         public async Task<IActionResult> GetAddreses([FromHeader(Name = "Authorization")] string token)
         {
             return await SendQuery(new OzlukAdresesQuery
@@ -47,10 +58,36 @@ namespace WebAPI.Controllers.Ozluk
             });
         }
 
+        [HttpPut("addres")]
+        [Authorize]
+        [Tags("Ozluk: Address")]
+        public async Task<IActionResult> UpdateAddres()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+
+        [HttpDelete("addres")]
+        [Authorize]
+        [Tags("Ozluk: Address")]
+        public async Task<IActionResult> DeleteAddres()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+        #endregion
+
+        #region Email CRUD Operations
+        [HttpPost("email")]
+        [Authorize]
+        [Tags("Ozluk: Email")]
+        public async Task<IActionResult> CreateEmail()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
 
         // Emails
         [HttpGet("email")]
         [Authorize]
+        [Tags("Ozluk: Email")]
         public async Task<IActionResult> GetEmail([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukEmailQueryRequestDTO query)
         {
             return await SendQuery(new OzlukEmailQuery
@@ -62,6 +99,7 @@ namespace WebAPI.Controllers.Ozluk
 
         [HttpGet("emails")]
         [Authorize]
+        [Tags("Ozluk: Email")]
         public async Task<IActionResult> GetEmails([FromHeader(Name = "Authorization")] string token)
         {
             return await SendQuery(new OzlukEmailsQuery
@@ -70,8 +108,36 @@ namespace WebAPI.Controllers.Ozluk
             });
         }
 
+        [HttpPut("email")]
+        [Authorize]
+        [Tags("Ozluk: Email")]
+        public async Task<IActionResult> UpdateEmail()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+
+        [HttpDelete("email")]
+        [Authorize]
+        [Tags("Ozluk: Email")]
+        public async Task<IActionResult> DeleteEmail()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+        #endregion
+
+
+        #region Phone CRUD Operations
+        [HttpPost("phone")]
+        [Authorize]
+        [Tags("Ozluk: Phone")]
+        public async Task<IActionResult> CreatePhone()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+
         [HttpGet("phone")]
         [Authorize]
+        [Tags("Ozluk: Phone")]
         public async Task<IActionResult> GetPhone([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukPhoneQueryRequestDTO command)
         {
             return await SendQuery(new OzlukPhoneQuery
@@ -83,6 +149,7 @@ namespace WebAPI.Controllers.Ozluk
 
         [HttpGet("phones")]
         [Authorize]
+        [Tags("Ozluk: Phone")]
         public async Task<IActionResult> GetPhones([FromHeader(Name = "Authorization")] string token)
         {
             return await SendQuery(new OzlukPhonesQuery
@@ -91,5 +158,21 @@ namespace WebAPI.Controllers.Ozluk
             });
         }
 
+        [HttpPut("phone")]
+        [Authorize]
+        [Tags("Ozluk: Phone")]
+        public async Task<IActionResult> UpdatePhone()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+        
+        [HttpDelete("phone")]
+        [Authorize]
+        [Tags("Ozluk: Phone")]
+        public async Task<IActionResult> DeletePhone()
+        {
+            return await Task.FromResult(Ok("Not implemented yet"));
+        }
+        #endregion
     }
 }

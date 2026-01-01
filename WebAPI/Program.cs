@@ -190,6 +190,7 @@ namespace WebAPI
                     // Scalar'ın yukarıdaki native openapi json'ını okumasını sağlıyoruz
                     options.WithOpenApiRoutePattern("/openapi/v1.json");
                     options.WithTitle("AEU OBS API");
+                    options.WithDefaultOpenAllTags(false);
                 });
 
                 // Tarayıcıyı Açma (Opsiyonel)

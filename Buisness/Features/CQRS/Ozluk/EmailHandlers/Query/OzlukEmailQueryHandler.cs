@@ -2,7 +2,7 @@
 using Business.Concrete.OzlukManagers;
 using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
-using Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukQueryDTOs;
+using Business.DTOs.ResponseDTOs.OzlukDTOs.EmailDTOs.QueryDTOs;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;

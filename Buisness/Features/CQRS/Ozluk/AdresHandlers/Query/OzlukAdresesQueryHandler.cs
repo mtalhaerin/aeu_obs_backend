@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Features.CQRS._Generic.Secured;
-using Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukQueryDTOs;
+using Business.DTOs.ResponseDTOs.OzlukDTOs.AdresDTOs.QueryDTOs;
 
 namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
 {

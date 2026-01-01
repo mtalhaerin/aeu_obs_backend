@@ -10,8 +10,8 @@ namespace Entities.Concrete.OzlukEntities
         public Guid EpostaUuid { get; set; } = Guid.NewGuid();
         public Guid KullaniciUuid { get; set; } = Guid.Empty;
         public string EpostaAdresi { get; set; } = string.Empty;
-        public EpostaTipi EpostaTipi { get; set; }
-        public bool Oncelikli { get; set; }
+        public EpostaTipi EpostaTipi { get; set; } = EpostaTipi.DIGER;
+        public bool Oncelikli { get; set; } = false;
         public DateTime OlusturmaTarihi { get; set; }
         public DateTime GuncellemeTarihi { get; set; }
 

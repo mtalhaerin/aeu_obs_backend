@@ -1,5 +1,4 @@
-﻿using Business.DTOs.ResponseDTOs.OzlukDTOs.OzlukCommandDTOs;
-using Business.Features.CQRS._Generic;
+﻿using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Response;
 using Business.Features.CQRS._Generic.Secured;
 
