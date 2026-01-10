@@ -1,7 +1,9 @@
 ﻿using Business.Concrete;
+using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.CommandDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.QueryDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.QueryDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs.QueryDTOs;
+using Business.Features.CQRS.Ozluk.AdresHandlers.Command;
 using Business.Features.CQRS.Ozluk.AdresHandlers.Query;
 using Business.Features.CQRS.Ozluk.EmailHandlers.Query;
 using Business.Features.CQRS.Ozluk.TelefonHandlers.Query;
@@ -28,9 +30,18 @@ namespace WebAPI.Controllers.Ozluk
         [HttpPost("addres")]
         [Authorize]
         [Tags("Ozluk: Address")]
-        public async Task<IActionResult> CreateAddres()
+        public async Task<IActionResult> CreateAddres([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukAddresAddCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukAdresesAddCommand
+            {
+                Authorization = token,
+                Sokak =  body.Sokak,
+                Sehir = body.Sehir,
+                Ilce = body.Ilce,
+                PostaKodu = body.PostaKodu,
+                Ulke = body.Ulke,
+                Oncelikli = body.Oncelikli
+            });
         }
 
         // Single Addres

@@ -78,6 +78,7 @@ namespace Core.Utilities.Security.JWT
             claims.AddLastName(kullanici.Soyad);
             claims.AddMiddleName(kullanici.OrtaAd);
             claims.AddIdentityType(kullanici.KullaniciTipi.ToString());
+            claims.AddIdentityNumber(kullanici.KurumSicilNo);
             if (islemYetkileri != null)
                 claims.AddRoles(islemYetkileri.Select(c => c.IslemYetkisiUuid).ToArray());
             else

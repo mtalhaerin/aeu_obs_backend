@@ -120,8 +120,7 @@ CREATE TABLE IF NOT EXISTS adresler(
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE,
-    UNIQUE KEY uk_oncelikli_adres (kullanici_uuid,oncelikli)
+    FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE
 
 );
 
@@ -136,8 +135,7 @@ CREATE TABLE IF NOT EXISTS telefonlar(
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE,
-    UNIQUE (kullanici_uuid, telefon_numarasi),
-    UNIQUE KEY uk_oncelikli_telefon(kullanici_uuid,oncelikli)
+    UNIQUE (kullanici_uuid, telefon_numarasi)
 
 );
 
@@ -150,8 +148,7 @@ CREATE TABLE IF NOT EXISTS epostalar(
     olusturma_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE,
-    UNIQUE KEY uk_oncelikli_eposta (kullanici_uuid, oncelikli)
+    FOREIGN KEY (kullanici_uuid) REFERENCES kullanicilar(kullanici_uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS dersler(

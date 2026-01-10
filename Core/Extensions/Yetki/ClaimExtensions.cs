@@ -56,6 +56,10 @@ namespace Core.Extensions.Yetki
         {
             claims.Add(new Claim("identity_type", identityType));
         }
+        public static void AddIdentityNumber(this ICollection<Claim> claims, string identityNumber)
+        {
+            claims.Add(new Claim("identity_number", identityNumber));
+        }
         // 5. ROLES -> "role"
         public static void AddRoles(this ICollection<Claim> claims, string[] roles)
         {

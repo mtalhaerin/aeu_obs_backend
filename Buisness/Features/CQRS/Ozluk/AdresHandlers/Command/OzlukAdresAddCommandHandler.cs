@@ -69,6 +69,24 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                     Ulke = request.Ulke,
                     Oncelikli = request.Oncelikli
                 };
+                
+                var addedAdres = await _adresService.AddAdresAsync(newAdres);
+                if (!addedAdres.Success)
+                {
+                    return BaseResponse<OzlukAdresAddCommandResponseDTO>.Failure("Adres eklenemedi", statusCode: 500);
+                }
+                var adresResponse = new OzlukAdresAddCommandResponseDTO
+                {
+                    AdresUuid = addedAdres.Data.AdresUuid,
+                    KullaniciUuid = addedAdres.Data.KullaniciUuid,
+                    Sokak = addedAdres.Data.Sokak,
+                    Sehir = addedAdres.Data.Sehir,
+                    Ilce = addedAdres.Data.Ilce,
+                    PostaKodu = addedAdres.Data.PostaKodu,
+                    Ulke = addedAdres.Data.Ulke,
+                    Oncelikli = addedAdres.Data.Oncelikli
+                };
+                return BaseResponse<OzlukAdresAddCommandResponseDTO>.Success(adresResponse, "Adres başarıyla eklendi", 201);
             }
             catch (Exception)
             {
@@ -78,3 +96,6 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
         }
     }
 }
+
+
+

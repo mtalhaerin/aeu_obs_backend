@@ -234,7 +234,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliAdres");
+                //entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliAdres");
                 entity.HasOne(e => e.Kullanici).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Adresler_Kullanicilar");
             });
 
@@ -284,7 +284,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 entity.HasIndex(e => e.EpostaAdresi).IsUnique().HasDatabaseName("UK_Epostalar_EpostaAdresi");
-                entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliEposta");
+                //entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliEposta");
                 entity.HasOne(e => e.Kullanici).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Epostalar_Kullanicilar");
             });
 
@@ -412,8 +412,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                entity.HasIndex(e => new { e.KullaniciUuid, e.TelefonNo }).IsUnique().HasDatabaseName("UK_Telefonlar_Kullanici_Telefon");
-                entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliTelefon");
+                //entity.HasIndex(e => new { e.KullaniciUuid, e.TelefonNo }).IsUnique().HasDatabaseName("UK_Telefonlar_Kullanici_Telefon");
+                //entity.HasIndex(e => new { e.KullaniciUuid, e.Oncelikli }).IsUnique().HasDatabaseName("UK_OncelikliTelefon");
                 entity.HasOne(e => e.Kullanici).WithMany().HasForeignKey(e => e.KullaniciUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Telefonlar_Kullanicilar");
             });
 

@@ -12,6 +12,7 @@ namespace Business.Concrete.OzlukManagers
 {
     public interface IAdresService
     {
+        Task<IDataResult<Adres>> AddAdresAsync(Adres adres);
         Task<IDataResult<Adres>> GetUserAddresByUuidAsync(Guid kullaniciUuid, Guid? adresUuid);
         Task<IDataResult<IEnumerable<Adres>>> GetUserAddresesAsync(Guid kullaniciUuid);
     }
@@ -22,6 +23,16 @@ namespace Business.Concrete.OzlukManagers
         public AdresManager(IAdresDal adresDal)
         {
             _adresDal = adresDal;
+        }
+
+        public Task<IDataResult<Adres>> AddAdresAsync(Adres adres)
+        {
+            if (adres == null)
+                return Task.FromResult<IDataResult<Adres>>(new ErrorDataResult<Adres>(null!, "Adres bilgileri boş olamaz."));
+            adres.OlusturmaTarihi = DateTime.UtcNow;
+            adres.GuncellemeTarihi = DateTime.UtcNow;
+            _adresDal.Add(adres);
+            return Task.FromResult<IDataResult<Adres>>(new SuccessDataResult<Adres>(adres, "Adres başarıyla eklendi."));
         }
 
         public async Task<IDataResult<Adres>> GetUserAddresByUuidAsync(Guid kullaniciUuid, Guid? adresUuid)
