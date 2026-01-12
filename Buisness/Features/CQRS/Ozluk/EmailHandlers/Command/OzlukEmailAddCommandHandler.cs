@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Business.Features.CQRS.Ozluk.EmailHandlers.Command
 {
-    public class OzlukEmailesAddCommand : ISecuredCommand<BaseResponse<OzlukEmailAddCommandResponseDTO>>
+    public class OzlukEmailAddCommand : ISecuredCommand<BaseResponse<OzlukEmailAddCommandResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
         public Guid KullaniciUuid { get; set; } = Guid.Empty;
@@ -25,7 +25,7 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Command
         public EpostaTipi EpostaTipi { get; set; } = EpostaTipi.DIGER;
         public bool Oncelikli { get; set; } = false;
     }
-    public class OzlukEmailAddCommandHandler : ICommandHandler<OzlukEmailesAddCommand, BaseResponse<OzlukEmailAddCommandResponseDTO>>
+    public class OzlukEmailAddCommandHandler : ICommandHandler<OzlukEmailAddCommand, BaseResponse<OzlukEmailAddCommandResponseDTO>>
     {
         private readonly IGenericHelper _genericHelper;
         private readonly IUserContext _userContext;
@@ -40,7 +40,7 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Command
             _emailService = EmailService;
         }
 
-        public async Task<BaseResponse<OzlukEmailAddCommandResponseDTO>> Handle(OzlukEmailesAddCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<OzlukEmailAddCommandResponseDTO>> Handle(OzlukEmailAddCommand request, CancellationToken cancellationToken)
         {
             try
             {

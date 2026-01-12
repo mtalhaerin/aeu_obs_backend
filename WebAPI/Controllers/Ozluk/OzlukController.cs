@@ -1,10 +1,12 @@
 ﻿using Business.Concrete;
 using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.CommandDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.QueryDTOs;
+using Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.CommandDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.QueryDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs.QueryDTOs;
 using Business.Features.CQRS.Ozluk.AdresHandlers.Command;
 using Business.Features.CQRS.Ozluk.AdresHandlers.Query;
+using Business.Features.CQRS.Ozluk.EmailHandlers.Command;
 using Business.Features.CQRS.Ozluk.EmailHandlers.Query;
 using Business.Features.CQRS.Ozluk.TelefonHandlers.Query;
 using MediatR;
@@ -72,17 +74,33 @@ namespace WebAPI.Controllers.Ozluk
         [HttpPut("addres")]
         [Authorize]
         [Tags("Ozluk: Address")]
-        public async Task<IActionResult> UpdateAddres()
+        public async Task<IActionResult> UpdateAddres([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukAddresUpdateCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukAdresesUpdateCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                AdresUuid = body.AdresUuid,
+                Sokak = body.Sokak,
+                Sehir = body.Sehir,
+                Ilce = body.Ilce,
+                PostaKodu = body.PostaKodu,
+                Ulke = body.Ulke,
+                Oncelikli = body.Oncelikli
+            });
         }
 
         [HttpDelete("addres")]
         [Authorize]
         [Tags("Ozluk: Address")]
-        public async Task<IActionResult> DeleteAddres()
+        public async Task<IActionResult> DeleteAddres([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukAddresDeleteCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukAdresesDeleteCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                AdresUuid = body.AdresUuid
+            });
         }
         #endregion
 
@@ -90,9 +108,16 @@ namespace WebAPI.Controllers.Ozluk
         [HttpPost("email")]
         [Authorize]
         [Tags("Ozluk: Email")]
-        public async Task<IActionResult> CreateEmail()
+        public async Task<IActionResult> CreateEmail([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukEmailAddCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukEmailAddCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                EpostaAdresi = body.EpostaAdresi,
+                EpostaTipi = body.EpostaTipi,
+                Oncelikli = body.Oncelikli
+            });
         }
 
         // Emails
@@ -122,17 +147,30 @@ namespace WebAPI.Controllers.Ozluk
         [HttpPut("email")]
         [Authorize]
         [Tags("Ozluk: Email")]
-        public async Task<IActionResult> UpdateEmail()
+        public async Task<IActionResult> UpdateEmail([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukEmailUpdateCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukEmailUpdateCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                EpostaUuid = body.EpostaUuid,
+                EpostaAdresi = body.EpostaAdresi,
+                EpostaTipi = body.EpostaTipi,
+                Oncelikli = body.Oncelikli
+            });
         }
 
         [HttpDelete("email")]
         [Authorize]
         [Tags("Ozluk: Email")]
-        public async Task<IActionResult> DeleteEmail()
+        public async Task<IActionResult> DeleteEmail([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukEmailDeleteCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukEmailDeleteCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                EpostaUuid = body.EpostaUuid
+            });
         }
         #endregion
 

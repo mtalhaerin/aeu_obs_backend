@@ -26,7 +26,6 @@
 	<ItemGroup>
 	  <Folder Include="DTOs\RequestDTOs\Dashboard\Profile\Query\" />
 	  <Folder Include="DTOs\ResponseDTOs\AuthDTOs\Query\" />
-	  <Folder Include="Features\CQRS\Ozluk\TelefonHandlers\Command\" />
 	</ItemGroup>
 
 </Project>

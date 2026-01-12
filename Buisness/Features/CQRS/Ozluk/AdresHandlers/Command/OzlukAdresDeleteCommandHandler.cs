@@ -16,7 +16,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
     {
         public string? Authorization { get; set; } = null;
         public Guid KullaniciUuid { get; set; } = Guid.Empty;
-        public Guid OzlukAdresUuid { get; set; } =  Guid.Empty;
+        public Guid AdresUuid { get; set; } =  Guid.Empty;
     }
     public class OzlukAdresDeleteCommandHandler : ICommandHandler<OzlukAdresesDeleteCommand, BaseResponse<OzlukAdresDeleteCommandResponseDTO>>
     {
@@ -53,9 +53,9 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                 if(addreses.Data.Count() == 1)
                     return BaseResponse<OzlukAdresDeleteCommandResponseDTO>.Failure("En az bir adresinizin olması gerekmekte. Adresinizi silme işlemi gerçekleştirmeden  önce bir adres ekleyiniz.", statusCode: 409);
 
-                Adres? addresToDelete = addreses.Data.FirstOrDefault(a => a.AdresUuid == request.OzlukAdresUuid);
+                Adres? addresToDelete = addreses.Data.FirstOrDefault(a => a.AdresUuid == request.AdresUuid);
                 Adres? newPrimaryAddres = addreses.Data
-                    .Where(a => !a.Oncelikli && a.AdresUuid != request.OzlukAdresUuid)
+                    .Where(a => !a.Oncelikli && a.AdresUuid != request.AdresUuid)
                     .OrderByDescending(a => a.OlusturmaTarihi)
                     .FirstOrDefault();
                 if (addresToDelete == null)
