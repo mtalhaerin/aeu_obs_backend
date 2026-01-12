@@ -9,8 +9,8 @@ namespace Business.DTOs.ResponseDTOs.OzlukDTOs.AdresDTOs.CommandDTOs
 {
     public class OzlukAdresAddCommandResponseDTO : CommandResponseDTOBase
     {
-        public Guid AdresUuid { get; set; } = Guid.Empty;
         public Guid KullaniciUuid { get; set; } = Guid.Empty;
+        public Guid AdresUuid { get; set; } = Guid.Empty;
         public string Sokak { get; set; } = string.Empty;
         public string Sehir { get; set; } = string.Empty;
         public string Ilce { get; set; } = string.Empty;

@@ -4,6 +4,7 @@ namespace Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.CommandDTOs
 {
     public class OzlukAddresUpdateCommandRequestDTO : CommandRequestDTOBase
     {
+        public Guid KullaniciUuid { get; set; } = Guid.Empty;
         public Guid AdresUuid { get; set; } = Guid.Empty;
         public string Sokak { get; set; } = string.Empty;
         public string Sehir { get; set; } = string.Empty;

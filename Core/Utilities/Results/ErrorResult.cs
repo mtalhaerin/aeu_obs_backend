@@ -1,6 +1,8 @@
-﻿namespace Core.Utilities.Results
+﻿using Core.Utilities.Results.Abstract;
+
+namespace Core.Utilities.Results
 {
-    public class ErrorResult : Result
+    public class ErrorResult : Result, IResult
     {
         public ErrorResult(string message) : base(false, message)
         {

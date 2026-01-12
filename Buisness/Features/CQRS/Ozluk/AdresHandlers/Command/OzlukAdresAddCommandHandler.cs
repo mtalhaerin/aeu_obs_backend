@@ -7,7 +7,9 @@ using Business.Features.CQRS._Generic.Helpers;
 using Business.Features.CQRS._Generic.Response;
 using Business.Features.CQRS._Generic.Secured;
 using Business.Features.CQRS.Ozluk.AdresHandlers.Query;
+using Business.ValidationRules.FluentValidation.FieldValidators.OzlukFieldValidators;
 using Core.Entities.Concrete.OzlukEntities;
+using Core.Entities.Enums;
 using Core.Utilities.Results.Abstract;
 using Entities.Concrete.OzlukEntities;
 using System;
@@ -21,6 +23,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
     public class OzlukAdresesAddCommand : ISecuredCommand<BaseResponse<OzlukAdresAddCommandResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
+        public Guid KullaniciUuid { get; set; } = Guid.Empty;
         public string Sokak { get; set; } = string.Empty;
         public string Sehir { get; set; } = string.Empty;
         public string Ilce { get; set; } = string.Empty;
@@ -50,18 +53,21 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                IDataResult<IEnumerable<Adres>> adreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
+                if ((kullanici.KullaniciTipi != KullaniciTipi.PERSONEL) && 
+                    (kullanici.KullaniciUuid != request.KullaniciUuid))
+                    return BaseResponse<OzlukAdresAddCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
-                bool haveOncelikli = adreses.Data.Any(adres => adres.Oncelikli);
+                IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
+
+                bool haveOncelikli = addreses.Data.Any(adres => adres.Oncelikli);
 
                 if (haveOncelikli && request.Oncelikli)
                     return BaseResponse<OzlukAdresAddCommandResponseDTO>.Failure("Zaten öncelikli bir adresininz bulunmakta", statusCode: 409);
 
-
                 Adres newAdres = new Adres
                 {
                     AdresUuid = Guid.NewGuid(),
-                    KullaniciUuid = kullanici.KullaniciUuid,
+                    KullaniciUuid = request.KullaniciUuid,
                     Sokak = request.Sokak,
                     Sehir = request.Sehir,
                     Ilce = request.Ilce,
@@ -69,12 +75,14 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                     Ulke = request.Ulke,
                     Oncelikli = request.Oncelikli
                 };
-                
+
+                if (!haveOncelikli || addreses.Data.Count() == 0)
+                    newAdres.Oncelikli = true;
+
                 var addedAdres = await _adresService.AddAdresAsync(newAdres);
                 if (!addedAdres.Success)
-                {
                     return BaseResponse<OzlukAdresAddCommandResponseDTO>.Failure("Adres eklenemedi", statusCode: 500);
-                }
+                
                 var adresResponse = new OzlukAdresAddCommandResponseDTO
                 {
                     AdresUuid = addedAdres.Data.AdresUuid,
@@ -86,6 +94,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                     Ulke = addedAdres.Data.Ulke,
                     Oncelikli = addedAdres.Data.Oncelikli
                 };
+
                 return BaseResponse<OzlukAdresAddCommandResponseDTO>.Success(adresResponse, "Adres başarıyla eklendi", 201);
             }
             catch (Exception)

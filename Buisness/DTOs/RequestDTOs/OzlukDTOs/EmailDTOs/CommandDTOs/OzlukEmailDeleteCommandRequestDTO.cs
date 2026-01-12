@@ -4,6 +4,7 @@ namespace Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.CommandDTOs
 {
     public class OzlukEmailDeleteCommandRequestDTO : CommandRequestDTOBase
     {
+        public Guid KullaniciUuid { get; set; } = Guid.Empty;
         public Guid EpostaUuid { get; set; } = Guid.Empty;
     }
 }

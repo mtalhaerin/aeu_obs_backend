@@ -1,4 +1,5 @@
 ﻿using Business.ValidationRules.Commons;
+using Core.Utilities.Messages;
 using Core.Utilities.Validation;
 using FluentValidation;
 
@@ -17,9 +18,9 @@ namespace Business.ValidationRules.FluentValidation.FieldValidators.OzlukFieldVa
             RuleFor(x => x.AddressUuid)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().NotEmpty()
-                    .WithMessage(Core.Utilities.Messages.ValidationMessageUtility.RequiredFormat(nameof(IAddressUuidFieldValidator.AddressUuid)))
+                    .WithMessage(ValidationMessageUtility.RequiredFormat(nameof(IAddressUuidFieldValidator.AddressUuid)))
                 .Must(ValidationHelper.BeAValidUuid)
-                    .WithMessage(Core.Utilities.Messages.ValidationMessageUtility.InvalidFormat(nameof(IAddressUuidFieldValidator.AddressUuid)));
+                    .WithMessage(ValidationMessageUtility.InvalidFormat(nameof(IAddressUuidFieldValidator.AddressUuid)));
 
         }
     }

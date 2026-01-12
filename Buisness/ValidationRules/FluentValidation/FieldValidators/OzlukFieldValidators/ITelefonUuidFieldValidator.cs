@@ -1,4 +1,5 @@
 ﻿using Business.ValidationRules.Commons;
+using Core.Utilities.Messages;
 using Core.Utilities.Validation;
 using FluentValidation;
 using System;
@@ -22,9 +23,9 @@ namespace Business.ValidationRules.FluentValidation.FieldValidators.OzlukFieldVa
             RuleFor(x => x.TelefonUuid)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().NotEmpty()
-                    .WithMessage(Core.Utilities.Messages.ValidationMessageUtility.RequiredFormat(nameof(ITelefonUuidFieldValidator.TelefonUuid)))
+                    .WithMessage(ValidationMessageUtility.RequiredFormat(nameof(ITelefonUuidFieldValidator.TelefonUuid)))
                 .Must(ValidationHelper.BeAValidUuid)
-                    .WithMessage(Core.Utilities.Messages.ValidationMessageUtility.InvalidFormat(nameof(ITelefonUuidFieldValidator.TelefonUuid)));
+                    .WithMessage(ValidationMessageUtility.InvalidFormat(nameof(ITelefonUuidFieldValidator.TelefonUuid)));
 
         }
     }

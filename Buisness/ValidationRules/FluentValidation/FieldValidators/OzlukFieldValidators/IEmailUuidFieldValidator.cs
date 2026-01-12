@@ -1,4 +1,5 @@
 ﻿using Business.ValidationRules.Commons;
+using Core.Utilities.Messages;
 using Core.Utilities.Validation;
 using FluentValidation;
 using System;
@@ -23,9 +24,9 @@ namespace Business.ValidationRules.FluentValidation.FieldValidators.OzlukFieldVa
             RuleFor(x => x.EmailUuid)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().NotEmpty()
-                    .WithMessage(Core.Utilities.Messages.ValidationMessageUtility.RequiredFormat(nameof(IEmailUuidFieldValidator.EmailUuid)))
+                    .WithMessage(ValidationMessageUtility.RequiredFormat(nameof(IEmailUuidFieldValidator.EmailUuid)))
                 .Must(ValidationHelper.BeAValidUuid)
-                    .WithMessage(Core.Utilities.Messages.ValidationMessageUtility.InvalidFormat(nameof(IEmailUuidFieldValidator.EmailUuid)));
+                    .WithMessage(ValidationMessageUtility.InvalidFormat(nameof(IEmailUuidFieldValidator.EmailUuid)));
 
         }
     }

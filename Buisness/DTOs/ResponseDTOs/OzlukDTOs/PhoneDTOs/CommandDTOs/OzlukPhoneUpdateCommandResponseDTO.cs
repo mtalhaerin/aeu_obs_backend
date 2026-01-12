@@ -5,8 +5,8 @@ namespace Business.DTOs.ResponseDTOs.OzlukDTOs.PhoneDTOs.CommandDTOs
 {
     public class OzlukPhoneUpdateCommandResponseDTO : CommandResponseDTOBase
     {
-        public Guid TelefonUuid { get; set; } = Guid.Empty;
         public Guid KullaniciUuid { get; set; } = Guid.Empty;
+        public Guid TelefonUuid { get; set; } = Guid.Empty;
         public string UlkeKodu { get; set; } = string.Empty;
         public string TelefonNo { get; set; } = string.Empty;
         public TelefonTipi TelefonTipi { get; set; } = TelefonTipi.CEP;

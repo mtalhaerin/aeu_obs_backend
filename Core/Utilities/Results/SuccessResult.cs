@@ -1,6 +1,8 @@
-﻿namespace Core.Utilities.Results
+﻿using Core.Utilities.Results.Abstract;
+
+namespace Core.Utilities.Results
 {
-    public class SuccessResult : Result
+    public class SuccessResult : Result, IResult
     {
         public SuccessResult(string message) : base(true, message)
         {
