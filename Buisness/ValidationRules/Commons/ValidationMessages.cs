@@ -56,7 +56,7 @@ namespace Business.ValidationRules.Commons
             {
                 ".edu", ".org", ".school", ".academy", ".college", ".university",
                 ".courses", ".study", ".institute", ".training", ".education",
-                ".k12", ".gov", ".govt", ".gouv", ".go", ".ac"
+                ".k12", ".gov", ".govt", ".gouv", ".go", ".ac", "edu.tr"
             };
 
             string domains = string.Join(", ", acceptedDomains);
