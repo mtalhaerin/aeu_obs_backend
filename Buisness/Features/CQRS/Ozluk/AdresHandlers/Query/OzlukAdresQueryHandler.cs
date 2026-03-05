@@ -9,6 +9,7 @@ using Business.Features.CQRS._Generic.Response;
 using Business.Features.CQRS._Generic.Secured;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
+using Core.Entities.Enums;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Security.JWT;
 using Entities.Concrete.OzlukEntities;
@@ -24,7 +25,8 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
     public class OzlukAdresQuery : ISecuredQuery<BaseResponse<OzlukAdresQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
-        public Guid? AddressUuid { get; set; } = null;
+        public Guid? KullaniciUuid { get; set; } = Guid.Empty;
+        public Guid? AddressUuid { get; set; } = Guid.Empty;
     }
 
     public class OzlukAdresQueryHandler : IQueryHandler<OzlukAdresQuery, BaseResponse<OzlukAdresQueryResponseDTO>>
@@ -50,13 +52,16 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if (request.AddressUuid == null || request.AddressUuid == Guid.Empty)
-                {
-                    return BaseResponse<OzlukAdresQueryResponseDTO>.Failure("Adres UUID'si belirtilmemiş", statusCode: 400);
-                }
-                
+                if (request.AddressUuid == Guid.Empty || request.AddressUuid == null || request.KullaniciUuid == Guid.Empty || request.KullaniciUuid == null)
+                    return BaseResponse<OzlukAdresQueryResponseDTO>.Failure("Adres veya Kullanıcı UUID'si belirtilmemiş", statusCode: 400);
+
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL &&
+                    kullanici.KullaniciUuid != request.KullaniciUuid)
+                    return BaseResponse<OzlukAdresQueryResponseDTO>.Failure("Başka kullancıya ait adres bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
+
+
                 IDataResult<Adres> adres = await _adresService.GetUserAddresByUuidAsync(kullanici.KullaniciUuid, request.AddressUuid);
-                
+
                 if (!adres.Success)
                 {
                     return BaseResponse<OzlukAdresQueryResponseDTO>.Failure("Adres bulunamadı", statusCode: 404);
@@ -65,7 +70,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
                 var profileResponse = new OzlukAdresQueryResponseDTO
                 {
                     AdresUuid = adres.Data.AdresUuid,
-                    KullaniciUuid = adres.Data.KullaniciUuid, 
+                    KullaniciUuid = adres.Data.KullaniciUuid,
                     Sokak = adres.Data.Sokak,
                     Sehir = adres.Data.Sehir,
                     Ilce = adres.Data.Ilce,

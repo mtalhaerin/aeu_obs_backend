@@ -49,8 +49,8 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Command
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if ((kullanici.KullaniciTipi != KullaniciTipi.PERSONEL) &&
-                    (kullanici.KullaniciUuid != request.KullaniciUuid))
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL &&
+                    kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukEmailUpdateCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
                 IDataResult<IEnumerable<Eposta>> emails = await _emailService.GetUserEmailsAsync(kullanici.KullaniciUuid);

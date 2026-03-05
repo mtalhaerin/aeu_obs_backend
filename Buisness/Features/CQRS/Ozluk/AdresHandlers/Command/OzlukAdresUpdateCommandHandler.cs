@@ -46,8 +46,8 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if ((kullanici.KullaniciTipi != KullaniciTipi.PERSONEL) &&
-                    (kullanici.KullaniciUuid != request.KullaniciUuid))
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL &&
+                    kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukAdresUpdateCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
                 IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
@@ -63,14 +63,14 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                 addressToUpdate.PostaKodu = request.PostaKodu;
                 addressToUpdate.Ulke = request.Ulke;
                 addressToUpdate.Oncelikli = request.Oncelikli;
-                
+
                 IDataResult<Adres>? updatedAddressResult = null;
                 if (request.Oncelikli)
                     updatedAddressResult = await _adresService.ResetPrimaryAddress(addressToUpdate);
                 else
                     updatedAddressResult = await _adresService.ResetNonPrimaryAddress(addressToUpdate);
 
-                if (!updatedAddressResult.Success) 
+                if (!updatedAddressResult.Success)
                     return BaseResponse<OzlukAdresUpdateCommandResponseDTO>.Failure("Adres güncelleme işlemi başarısız.", statusCode: 500);
 
                 var addressUpdateResponse = new OzlukAdresUpdateCommandResponseDTO

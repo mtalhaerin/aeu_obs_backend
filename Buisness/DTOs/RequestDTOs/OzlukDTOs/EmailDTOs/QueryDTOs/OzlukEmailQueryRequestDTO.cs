@@ -10,5 +10,6 @@ namespace Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.QueryDTOs
     public class OzlukEmailQueryRequestDTO : QueryRequestDTOBase
     {
         public Guid? EmailUuid { get; set; } = null;
+        public Guid? KullaniciUuid { get; set; } = null;
     }
 }

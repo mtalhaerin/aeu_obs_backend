@@ -9,6 +9,7 @@ using Business.Features.CQRS._Generic.Response;
 using Business.Features.CQRS._Generic.Secured;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
+using Core.Entities.Enums;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Security.JWT;
 using Entities.Concrete.OzlukEntities;
@@ -24,7 +25,8 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Query
     public class OzlukEmailQuery : ISecuredQuery<BaseResponse<OzlukEmailQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
-        public Guid? EmailUuid { get; set; } = null;
+        public Guid? KullaniciUuid { get; set; } = Guid.Empty;
+        public Guid? EmailUuid { get; set; } = Guid.Empty;
     }
 
     public class OzlukEmailQueryHandler : IQueryHandler<OzlukEmailQuery, BaseResponse<OzlukEmailQueryResponseDTO>>
@@ -50,11 +52,13 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Query
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if (request.EmailUuid == null || request.EmailUuid == Guid.Empty)
-                {
-                    return BaseResponse<OzlukEmailQueryResponseDTO>.Failure("Email UUID'si belirtilmemiş", statusCode: 400);
-                }
-                
+                if (request.EmailUuid == Guid.Empty || request.EmailUuid == null || request.KullaniciUuid == Guid.Empty || request.KullaniciUuid == null)
+                    return BaseResponse<OzlukEmailQueryResponseDTO>.Failure("Kullanici veya Email UUID'si belirtilmemiş", statusCode: 400);
+
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL &&
+                    kullanici.KullaniciUuid != request.KullaniciUuid)
+                    return BaseResponse<OzlukEmailQueryResponseDTO>.Failure("Başka kullancıya ait Email bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
+
                 IDataResult<Eposta> Email = await _epostaService.GetUserEmailByUuidAsync(kullanici.KullaniciUuid, request.EmailUuid);
                 
                 if (!Email.Success)

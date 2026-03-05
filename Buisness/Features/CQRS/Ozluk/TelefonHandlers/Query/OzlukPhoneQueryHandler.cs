@@ -2,6 +2,7 @@
 using Business.Concrete.OzlukManagers;
 using Business.ContextCarrier;
 using Business.DTOs.ResponseDTOs.Dashboard.Profile.Query;
+using Business.DTOs.ResponseDTOs.OzlukDTOs.EmailDTOs.QueryDTOs;
 using Business.DTOs.ResponseDTOs.OzlukDTOs.PhoneDTOs.QueryDTOs;
 using Business.Features.CQRS._Generic;
 using Business.Features.CQRS._Generic.Helpers;
@@ -9,6 +10,7 @@ using Business.Features.CQRS._Generic.Response;
 using Business.Features.CQRS._Generic.Secured;
 using Core.CrossCuttingConcerns.Caching;
 using Core.Entities.Concrete.OzlukEntities;
+using Core.Entities.Enums;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Security.JWT;
 using Entities.Concrete.OzlukEntities;
@@ -24,7 +26,8 @@ namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
     public class OzlukPhoneQuery : ISecuredQuery<BaseResponse<OzlukPhoneQueryResponseDTO>>
     {
         public string? Authorization { get; set; } = null;
-        public Guid? TelefonUuid { get; set; } = null;
+        public Guid? KullaniciUuid { get; set; } = Guid.Empty;
+        public Guid? TelefonUuid { get; set; } = Guid.Empty;
     }
 
     public class OzlukPhoneQueryHandler : IQueryHandler<OzlukPhoneQuery, BaseResponse<OzlukPhoneQueryResponseDTO>>
@@ -50,11 +53,14 @@ namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if (request.TelefonUuid == null || request.TelefonUuid == Guid.Empty)
+                if (request.TelefonUuid == null || request.TelefonUuid == Guid.Empty || request.KullaniciUuid == null || request.KullaniciUuid == Guid.Empty)
                 {
-                    return BaseResponse<OzlukPhoneQueryResponseDTO>.Failure("Telefon UUID'si belirtilmemiş", statusCode: 400);
+                    return BaseResponse<OzlukPhoneQueryResponseDTO>.Failure("Kullanici veya Telefon UUID'si belirtilmemiş", statusCode: 400);
                 }
-                
+
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL && kullanici.KullaniciUuid != request.KullaniciUuid)
+                    return BaseResponse<OzlukPhoneQueryResponseDTO>.Failure("Başka kullancıya ait Telefon bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
+
                 IDataResult<Telefon> Phone = await _telefonService.GetUserTelefonByUuidAsync(kullanici.KullaniciUuid, request.TelefonUuid);
                 
                 if (!Phone.Success)

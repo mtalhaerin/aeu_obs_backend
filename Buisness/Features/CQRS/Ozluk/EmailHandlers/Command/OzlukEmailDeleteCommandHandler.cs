@@ -46,8 +46,8 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Command
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if ((kullanici.KullaniciTipi != KullaniciTipi.PERSONEL) &&
-                    (kullanici.KullaniciUuid != request.KullaniciUuid))
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL &&
+                    kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukEmailDeleteCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
                 IDataResult<IEnumerable<Eposta>> emails = await _emailService.GetUserEmailsAsync(kullanici.KullaniciUuid);
@@ -69,10 +69,6 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Command
                 if (emailToDelete == null)
                     return BaseResponse<OzlukEmailDeleteCommandResponseDTO>.Failure("Silinmek istenen adres bulunamadı.", statusCode: 404);
 
-
-                IResult setPrimaryResult = await _emailService.SetPrimaryEmail(newPrimaryEmail);
-                if (!setPrimaryResult.Success)
-                    return BaseResponse<OzlukEmailDeleteCommandResponseDTO>.Failure("Yeni öncelikli adres ayarlanamadı.", statusCode: 500);
 
                 IResult deleteResult = await _emailService.DeleteByEmailUuidAsync(emailToDelete.EpostaUuid);
                 if (!deleteResult.Success)

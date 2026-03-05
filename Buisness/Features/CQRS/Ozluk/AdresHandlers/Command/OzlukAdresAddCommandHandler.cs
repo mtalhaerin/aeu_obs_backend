@@ -53,11 +53,12 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if ((kullanici.KullaniciTipi != KullaniciTipi.PERSONEL) && 
-                    (kullanici.KullaniciUuid != request.KullaniciUuid))
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL &&
+                    kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukAdresAddCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
-                IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
+                // DÜZELTME: hedef kullanıcının adresleri request.KullaniciUuid ile alınmalı.
+                IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(request.KullaniciUuid);
 
                 bool haveOncelikli = addreses.Data.Any(adres => adres.Oncelikli);
 
@@ -97,10 +98,10 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
 
                 return BaseResponse<OzlukAdresAddCommandResponseDTO>.Success(adresResponse, "Adres başarıyla eklendi", 201);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                // Hata yakalanıp uygun response döndürülüyor (ve loglama ekleyebilirsiniz).
+                return BaseResponse<OzlukAdresAddCommandResponseDTO>.Failure($"Command islemi sirasinda hata olustu: {ex.Message}", statusCode: 500);
             }
         }
     }

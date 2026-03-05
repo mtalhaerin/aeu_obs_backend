@@ -3,12 +3,15 @@ using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.CommandDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.AdresDTOs.QueryDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.CommandDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.EmailDTOs.QueryDTOs;
+using Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs.CommandDTOs;
 using Business.DTOs.RequestDTOs.OzlukDTOs.PhoneDTOs.QueryDTOs;
 using Business.Features.CQRS.Ozluk.AdresHandlers.Command;
 using Business.Features.CQRS.Ozluk.AdresHandlers.Query;
 using Business.Features.CQRS.Ozluk.EmailHandlers.Command;
 using Business.Features.CQRS.Ozluk.EmailHandlers.Query;
+using Business.Features.CQRS.Ozluk.TelefonHandlers.Command;
 using Business.Features.CQRS.Ozluk.TelefonHandlers.Query;
+using Core.Entities.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +40,7 @@ namespace WebAPI.Controllers.Ozluk
             return await SendCommand(new OzlukAdresesAddCommand
             {
                 Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
                 Sokak =  body.Sokak,
                 Sehir = body.Sehir,
                 Ilce = body.Ilce,
@@ -50,12 +54,13 @@ namespace WebAPI.Controllers.Ozluk
         [HttpGet("addres")]
         [Authorize]
         [Tags("Ozluk: Address")]
-        public async Task<IActionResult> GetAddres([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukAddresQueryRequestDTO query)
+        public async Task<IActionResult> GetAddres([FromHeader(Name = "Authorization")] string token, [FromQuery] OzlukAddresQueryRequestDTO body)
         {
             return await SendQuery(new OzlukAdresQuery
             {
                 Authorization = token,
-                AddressUuid = query.AddressUuid
+                KullaniciUuid = body.KullaniciUuid,
+                AddressUuid = body.AddressUuid
             });
         }
 
@@ -63,11 +68,12 @@ namespace WebAPI.Controllers.Ozluk
         [HttpGet("addreses")]
         [Authorize]
         [Tags("Ozluk: Address")]
-        public async Task<IActionResult> GetAddreses([FromHeader(Name = "Authorization")] string token)
+        public async Task<IActionResult> GetAddreses([FromHeader(Name = "Authorization")] string token, [FromQuery] Guid? kullaniciUuid)
         {
             return await SendQuery(new OzlukAdresesQuery
             {
                 Authorization = token,
+                KullaniciUuid = kullaniciUuid
             });
         }
 
@@ -124,23 +130,25 @@ namespace WebAPI.Controllers.Ozluk
         [HttpGet("email")]
         [Authorize]
         [Tags("Ozluk: Email")]
-        public async Task<IActionResult> GetEmail([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukEmailQueryRequestDTO query)
+        public async Task<IActionResult> GetEmail([FromHeader(Name = "Authorization")] string token, [FromQuery] OzlukEmailQueryRequestDTO body)
         {
             return await SendQuery(new OzlukEmailQuery
             {
                 Authorization = token,
-                EmailUuid = query.EmailUuid
+                EmailUuid = body.EmailUuid,
+                KullaniciUuid = body.KullaniciUuid
             });
         }
 
         [HttpGet("emails")]
         [Authorize]
         [Tags("Ozluk: Email")]
-        public async Task<IActionResult> GetEmails([FromHeader(Name = "Authorization")] string token)
+        public async Task<IActionResult> GetEmails([FromHeader(Name = "Authorization")] string token, [FromQuery] Guid? kullaniciUuid)
         {
             return await SendQuery(new OzlukEmailsQuery
             {
                 Authorization = token,
+                KullaniciUuid = kullaniciUuid
             });
         }
 
@@ -174,53 +182,76 @@ namespace WebAPI.Controllers.Ozluk
         }
         #endregion
 
-
         #region Phone CRUD Operations
         [HttpPost("phone")]
         [Authorize]
         [Tags("Ozluk: Phone")]
-        public async Task<IActionResult> CreatePhone()
+        public async Task<IActionResult> CreatePhone([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukPhoneAddCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukPhoneAddCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                UlkeKodu = body.UlkeKodu,
+                TelefonNo = body.TelefonNo,
+                TelefonTipi = body.TelefonTipi,
+                Oncelikli = body.Oncelikli
+            });
         }
 
         [HttpGet("phone")]
         [Authorize]
         [Tags("Ozluk: Phone")]
-        public async Task<IActionResult> GetPhone([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukPhoneQueryRequestDTO command)
+        public async Task<IActionResult> GetPhone([FromHeader(Name = "Authorization")] string token, [FromQuery] Guid? kullaniciUuid, Guid? telefonUuid)
         {
             return await SendQuery(new OzlukPhoneQuery
             {
                 Authorization = token,
-                TelefonUuid = command.TelefonUuid
+                KullaniciUuid = kullaniciUuid,
+                TelefonUuid = telefonUuid
             });
         }
 
         [HttpGet("phones")]
         [Authorize]
         [Tags("Ozluk: Phone")]
-        public async Task<IActionResult> GetPhones([FromHeader(Name = "Authorization")] string token)
+        public async Task<IActionResult> GetPhones([FromHeader(Name = "Authorization")] string token, [FromQuery] Guid? kullaniciUuid)
         {
             return await SendQuery(new OzlukPhonesQuery
             {
                 Authorization = token,
+                KullaniciUuid = kullaniciUuid
             });
         }
 
         [HttpPut("phone")]
         [Authorize]
         [Tags("Ozluk: Phone")]
-        public async Task<IActionResult> UpdatePhone()
+        public async Task<IActionResult> UpdatePhone([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukPhoneUpdateCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukPhoneUpdateCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                TelefonUuid = body.TelefonUuid,
+                UlkeKodu = body.UlkeKodu,
+                TelefonNo = body.TelefonNo,
+                TelefonTipi = body.TelefonTipi,
+                Oncelikli = body.Oncelikli
+            });
         }
         
         [HttpDelete("phone")]
         [Authorize]
         [Tags("Ozluk: Phone")]
-        public async Task<IActionResult> DeletePhone()
+        public async Task<IActionResult> DeletePhone([FromHeader(Name = "Authorization")] string token, [FromBody] OzlukPhoneDeleteCommandRequestDTO body)
         {
-            return await Task.FromResult(Ok("Not implemented yet"));
+            return await SendCommand(new OzlukPhoneDeleteCommand
+            {
+                Authorization = token,
+                KullaniciUuid = body.KullaniciUuid,
+                TelefonUuid = body.TelefonUuid
+            });
         }
         #endregion
     }

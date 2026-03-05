@@ -39,8 +39,8 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                 string token = _userContext.Token;
                 Kullanici kullanici = _userContext.CurrentUser;
 
-                if ((kullanici.KullaniciTipi != KullaniciTipi.PERSONEL) &&
-                    (kullanici.KullaniciUuid != request.KullaniciUuid))
+                if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL &&
+                    kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukAdresDeleteCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
                 IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
@@ -60,10 +60,6 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                     .FirstOrDefault();
                 if (addresToDelete == null)
                     return BaseResponse<OzlukAdresDeleteCommandResponseDTO>.Failure("Silinmek istenen adres bulunamadı.", statusCode: 404);
-
-                IResult setPrimaryResult = await _adresService.SetPrimaryAddres(newPrimaryAddres);
-                if (!setPrimaryResult.Success)
-                    return BaseResponse<OzlukAdresDeleteCommandResponseDTO>.Failure("Yeni öncelikli adres ayarlanamadı.", statusCode: 500);
 
                 IResult deleteResult = await _adresService.DeleteByAddresUuidAsync(addresToDelete.AdresUuid);
                 if (!deleteResult.Success)
