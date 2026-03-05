@@ -1,7 +1,6 @@
-﻿using Core.Entities.Concrete.OzlukEntities;
+using Core.Entities.Concrete.OzlukEntities;
 using Core.Entities.Enums;
 using Core.Utilities.Paging;
-using Core.Utilities.Results;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.DataResults;
 using DataAccess.Concrete.EntityFramework.OzlukDals;
@@ -16,7 +15,6 @@ namespace Business.Concrete
         Task<IDataResult<Kullanici>> GetByEmailAsync(string kurum_eposta);
         Task<IDataResult<Kullanici>> GetBySicilNoAsync(string kurumSicilNo);
         Task<IDataResult<List<Kullanici>>> GetAllByPaged(KullaniciTipi kullaniciTipi, string? ad, string? ortaAd, string? soyad, string? kurumEposta, string? kurumSicilNo, DateTime olusturmaTarihi, DateTime guncellemeTarihi, Pager? pager);
-        Task<IResult> AddKullaniciAsync(Kullanici kullanici);
     }
 
     public class KullaniciManager : IKullaniciService
@@ -80,8 +78,8 @@ namespace Business.Concrete
             DateTime guncellemeTarihi,
             Pager? pager)
         {
-            int page = pager?.Page <= 0 ? 1 : pager?.Page ?? 1;
-            int pageSize = pager?.PageSize <= 0 ? 10 : pager?.PageSize ?? 10;
+            int page     = pager?.Page     <= 0 ? 1  : pager?.Page     ?? 1;
+            int pageSize = pager?.PageSize  <= 0 ? 10 : pager?.PageSize ?? 10;
 
             var (items, totalCount) = await _kullaniciDal.GetPagedAsync(
                 kullaniciTipi == KullaniciTipi._ ? null : kullaniciTipi,
@@ -99,21 +97,9 @@ namespace Business.Concrete
                 pager.TotalCount = totalCount;
 
             if (!items.Any())
-                return new DataResult<List<Kullanici>>(items, false, "Kullanıcı bulunamadı.");
+                return new DataResult<List<Kullanici>>(items, false, "Kullan?c? bulunamad?.");
 
-            return new DataResult<List<Kullanici>>(items, true, "Kullanıcılar başarıyla getirildi.");
-        }
-
-        public async Task<IResult> AddKullaniciAsync(Kullanici kullanici)
-        {
-            var existing = await _kullaniciDal.GetAsync(k => k.KurumEposta == kullanici.KurumEposta
-                                                      || k.KurumSicilNo == kullanici.KurumSicilNo);
-            if (existing is not null)
-                return new ErrorResult("Bu e-posta veya sicil numarasına ait kullanıcı zaten mevcut.");
-
-            await _kullaniciDal.AddAsync(kullanici);
-
-            return new SuccessResult("Kullanıcı başarıyla eklendi.");
+            return new DataResult<List<Kullanici>>(items, true, "Kullan?c?lar ba?ar?yla getirildi.");
         }
     }
 }
