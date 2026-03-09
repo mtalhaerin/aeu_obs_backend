@@ -499,7 +499,11 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                entity.HasOne(e => e.Fakulte).WithMany().HasForeignKey(e => e.FakulteUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_AnaDallar_Fakulteler");
+                // Fixed: Properly map the bidirectional relationship
+                entity.HasOne(e => e.Fakulte)
+                      .WithMany(f => f.AnaDallar)  // This was missing - should reference the collection in Fakulte
+                      .HasForeignKey(e => e.FakulteUuid)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // bolumler
@@ -541,7 +545,11 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasDefaultValueSql("CURRENT_TIMESTAMP")
                       .ValueGeneratedOnAddOrUpdate();
 
-                entity.HasOne<AnaDal>().WithMany().HasForeignKey(e => e.AnaDalUuid).OnDelete(DeleteBehavior.Cascade).HasConstraintName("FK_Bolumler_AnaDallar");
+                // Fixed: Complete the relationship configuration
+                entity.HasOne(e => e.AnaDal)
+                      .WithMany(a => a.Bolumler)  // Reference the collection in AnaDal
+                      .HasForeignKey(e => e.AnaDalUuid)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // akademisyen_bolum_atamalari

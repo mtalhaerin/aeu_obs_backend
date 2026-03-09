@@ -13,6 +13,7 @@ namespace Entities.Concrete.FakulteEntities
 
         // Reference navigation
         public Fakulte? Fakulte { get; set; }
+        public ICollection<Bolum> Bolumler { get; set; } = new List<Bolum>();
     }
 }
 

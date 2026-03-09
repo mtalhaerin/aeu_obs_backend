@@ -25,7 +25,12 @@
 
 	<ItemGroup>
 	  <Folder Include="DTOs\RequestDTOs\Dashboard\Profile\Query\" />
+	  <Folder Include="DTOs\RequestDTOs\DersDTOs\AkademisyenDersAtamaIslemleriDTOs\QueryDTOs\" />
+	  <Folder Include="DTOs\RequestDTOs\DersDTOs\AkademisyenDersAtamaIslemleriDTOs\CommandDTOs\" />
 	  <Folder Include="DTOs\ResponseDTOs\AuthDTOs\Query\" />
+	  <Folder Include="DTOs\ResponseDTOs\FakulteDTOs\CommandDTOs\" />
+	  <Folder Include="Features\CQRS\FakulteIslemleri\AnadalHandlers\Command\" />
+	  <Folder Include="Features\CQRS\FakulteIslemleri\AnadalHandlers\Query\" />
 	</ItemGroup>
 
 </Project>

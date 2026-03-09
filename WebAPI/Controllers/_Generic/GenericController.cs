@@ -29,6 +29,7 @@ namespace WebAPI.Controllers.Base
                 202 => Accepted(response),
                 204 => NoContent(),
                 400 => BadRequest(response),
+                401 => Unauthorized(response),
                 404 => NotFound(response),
                 409 => Conflict(response),
                 500 => StatusCode(500, response),

@@ -65,6 +65,24 @@ namespace WebAPI
                         document.Components.SecuritySchemes.Add("Bearer", securityScheme);
                     }
 
+                    document.Tags = document.Tags.OrderBy(t => t.Name).ToList();
+
+                    foreach (var path in document.Paths)
+                    {
+                        foreach (var operation in path.Value.Operations)
+                        {
+                            var tag = operation.Value.Tags.FirstOrDefault();
+                            if (tag != null && tag.Name.Contains(":"))
+                            {
+                                // "Ozluk: Address" -> "Ozluk" yaparak ana klasöre toplarız
+                                // Ancak Scalar'da alt başlık (sub-tag) desteği sınırlı olabilir.
+                                // Eğer tamamen klasörleme istiyorsan:
+                                var parts = tag.Name.Split(':');
+                                tag.Name = parts[0].Trim(); // Sadece "Ozluk" kalır
+                            }
+                        }
+                    }
+
                     return Task.CompletedTask;
                 });
 
