@@ -59,7 +59,7 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Query
                     kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukEmailQueryResponseDTO>.Failure("Başka kullancıya ait Email bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
 
-                IDataResult<Eposta> Email = await _epostaService.GetUserEmailByUuidAsync(kullanici.KullaniciUuid, request.EmailUuid);
+                IDataResult<Eposta> Email = await _epostaService.GetUserEmailByUuidAsync(request.KullaniciUuid.Value, request.EmailUuid);
                 
                 if (!Email.Success)
                 {

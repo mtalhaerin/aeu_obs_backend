@@ -43,7 +43,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                     kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukAdresDeleteCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
-                IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
+                IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(request.KullaniciUuid);
 
                 bool haveOncelikli = addreses.Data.Any(adres => adres.Oncelikli);
 

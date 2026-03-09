@@ -1,6 +1,8 @@
 ﻿using Business.Concrete;
 using Business.Features.CQRS.Auth.Login;
 using Business.Features.CQRS.Auth.Logout;
+using Business.Features.CQRS.Auth.Refresh;
+using Business.Features.CQRS.Auth.Validate;
 using Business.Features.CQRS.Dashboard.Profile.Query;
 using Core.Entities.Concrete.OzlukEntities;
 using Entities.Concrete.OzlukEntities;
@@ -81,7 +83,7 @@ namespace WebAPI.Controllers.Auth
         // Token yenileme
         [HttpPost("refresh")]
         [Authorize]
-        public async Task<IActionResult> Refresh([FromHeader(Name = "Authorization")] LogoutCommand command)
+        public async Task<IActionResult> Refresh([FromHeader(Name = "Authorization")] RefreshCommand command)
         {
             return await SendCommand(command);
         }
@@ -89,7 +91,7 @@ namespace WebAPI.Controllers.Auth
         // Token validating
         [HttpPost("validate")]
         [Authorize]
-        public async Task<IActionResult> Validate([FromHeader(Name = "Authorization")] LogoutCommand command)
+        public async Task<IActionResult> Validate([FromHeader(Name = "Authorization")] ValidateCommand command)
         {
             return await SendCommand(command);
         }

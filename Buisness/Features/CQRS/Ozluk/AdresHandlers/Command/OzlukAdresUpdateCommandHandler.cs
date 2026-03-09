@@ -50,7 +50,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Command
                     kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukAdresUpdateCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
-                IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
+                IDataResult<IEnumerable<Adres>> addreses = await _adresService.GetUserAddresesAsync(request.KullaniciUuid);
 
                 Adres? addressToUpdate = addreses.Data.FirstOrDefault(a => a.AdresUuid == request.AdresUuid);
 

@@ -60,7 +60,7 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
                     return BaseResponse<OzlukAdresQueryResponseDTO>.Failure("Başka kullancıya ait adres bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
 
 
-                IDataResult<Adres> adres = await _adresService.GetUserAddresByUuidAsync(kullanici.KullaniciUuid, request.AddressUuid);
+                IDataResult<Adres> adres = await _adresService.GetUserAddresByUuidAsync(request.KullaniciUuid.Value, request.AddressUuid);
 
                 if (!adres.Success)
                 {

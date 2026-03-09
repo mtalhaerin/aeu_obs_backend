@@ -51,7 +51,7 @@ namespace Business.Features.CQRS.Ozluk.EmailHandlers.Command
                     kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukEmailAddCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
-                IDataResult<IEnumerable<Eposta>> Emailes = await _emailService.GetUserEmailsAsync(kullanici.KullaniciUuid);
+                IDataResult<IEnumerable<Eposta>> Emailes = await _emailService.GetUserEmailsAsync(request.KullaniciUuid);
 
                 bool haveOncelikli = Emailes.Data.Any(Email => Email.Oncelikli);
 

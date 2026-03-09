@@ -59,8 +59,11 @@ namespace Business.Features.CQRS.Ozluk.AdresHandlers.Query
     kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukAdresesQueryResponseDTO>.Failure("Başka kullancıya ait adres bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
 
-
-                IDataResult<IEnumerable<Adres>> adreses = await _adresService.GetUserAddresesAsync(kullanici.KullaniciUuid);
+                if (!(request.KullaniciUuid != null && request.KullaniciUuid != Guid.Empty))
+                {
+                    return BaseResponse<OzlukAdresesQueryResponseDTO>.Failure("Kullanıcı bulunamadı", statusCode: 404);
+                }
+                IDataResult<IEnumerable<Adres>> adreses = await _adresService.GetUserAddresesAsync(request.KullaniciUuid.Value);
 
                 if (!adreses.Success)
                 {

@@ -61,7 +61,7 @@ namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
                 if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL && kullanici.KullaniciUuid != request.KullaniciUuid)
                     return BaseResponse<OzlukPhoneQueryResponseDTO>.Failure("Başka kullancıya ait Telefon bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
 
-                IDataResult<Telefon> Phone = await _telefonService.GetUserTelefonByUuidAsync(kullanici.KullaniciUuid, request.TelefonUuid);
+                IDataResult<Telefon> Phone = await _telefonService.GetUserTelefonByUuidAsync(request.KullaniciUuid.Value, request.TelefonUuid);
                 
                 if (!Phone.Success)
                 {

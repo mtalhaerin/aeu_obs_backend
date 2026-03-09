@@ -60,7 +60,7 @@ namespace Business.Features.CQRS.Ozluk.TelefonHandlers.Query
                     return BaseResponse<OzlukPhonesQueryResponseDTO>.Failure("Başka kullancıya ait Telefon bilgisni okuma izniniz bulunamamkta.", statusCode: 401);
 
 
-                IDataResult<IEnumerable<Telefon>> telefonlar = await _telefonService.GetUserTelefonsAsync(kullanici.KullaniciUuid);
+                IDataResult<IEnumerable<Telefon>> telefonlar = await _telefonService.GetUserTelefonsAsync(request.KullaniciUuid.Value);
                 
                 if (!telefonlar.Success)
                 {
