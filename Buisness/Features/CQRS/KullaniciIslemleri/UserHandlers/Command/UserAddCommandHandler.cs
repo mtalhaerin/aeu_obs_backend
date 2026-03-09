@@ -79,8 +79,8 @@ namespace Business.Features.CQRS.KullaniciIslemleri.UserHandlers.Command
                     GuncellemeTarihi = DateTime.UtcNow
                 };
 
-                await _kullaniciServis.AddKullaniciAsync(newKullanici); 
-                if (!result.Success)
+                IResult addResult = await _kullaniciServis.AddKullaniciAsync(newKullanici); 
+                if (!addResult.Success)
                     return BaseResponse<UserAddCommandResponseDTO>.Failure(result.Message, statusCode: 500);
 
                 return BaseResponse<UserAddCommandResponseDTO>.Success(new UserAddCommandResponseDTO
@@ -101,7 +101,6 @@ namespace Business.Features.CQRS.KullaniciIslemleri.UserHandlers.Command
 
                 throw;
             }
-            return BaseResponse<UserAddCommandResponseDTO>.Success(null, null, 200);
         }
     }
 }

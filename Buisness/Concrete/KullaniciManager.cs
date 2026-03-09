@@ -17,6 +17,7 @@ namespace Business.Concrete
         Task<IDataResult<Kullanici>> GetBySicilNoAsync(string kurumSicilNo);
         Task<IDataResult<List<Kullanici>>> GetAllByPaged(KullaniciTipi kullaniciTipi, string? ad, string? ortaAd, string? soyad, string? kurumEposta, string? kurumSicilNo, DateTime olusturmaTarihi, DateTime guncellemeTarihi, Pager? pager);
         Task<IResult> AddKullaniciAsync(Kullanici kullanici);
+        Task<IResult> DeleteKullaniciAsync(Guid kullaniciUuid);
     }
 
     public class KullaniciManager : IKullaniciService
@@ -62,10 +63,19 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Kullanici>> UpdateKullaniciAsync(Kullanici kullanici)
         {
-            await _kullaniciDal.UpdateAsync(kullanici);
             var result = await _kullaniciDal.GetAsync(k => k.KullaniciUuid == kullanici.KullaniciUuid);
             if (result is null)
                 return new DataResult<Kullanici>(null, false);
+
+            result.KullaniciTipi = kullanici.KullaniciTipi;
+            result.Ad = kullanici.Ad;
+            result.OrtaAd = kullanici.OrtaAd;
+            result.Soyad = kullanici.Soyad;
+            result.KurumEposta = kullanici.KurumEposta;
+            result.KurumSicilNo = kullanici.KurumSicilNo;
+            result.GuncellemeTarihi = DateTime.UtcNow; // Güncelleme tarihini güncel zaman olarak ayarlıyoruz
+            await _kullaniciDal.UpdateAsync(result);
+
             return new DataResult<Kullanici>(result, true);
         }
 
@@ -114,6 +124,17 @@ namespace Business.Concrete
             await _kullaniciDal.AddAsync(kullanici);
 
             return new SuccessResult("Kullanıcı başarıyla eklendi.");
+        }
+
+        public async Task<IResult> DeleteKullaniciAsync(Guid kullaniciUuid)
+        {
+            var existing = await _kullaniciDal.GetAsync(k => k.KullaniciUuid == kullaniciUuid);
+            if (existing is null)
+                return new ErrorResult("Silinecek kullanıcı bulunamadı.");
+
+            await _kullaniciDal.DeleteAsync(existing);
+            return new SuccessResult("Kullanıcı başarıyla silindi.");
+
         }
     }
 }

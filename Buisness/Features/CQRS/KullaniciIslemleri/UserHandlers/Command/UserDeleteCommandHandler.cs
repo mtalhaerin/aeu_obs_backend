@@ -9,6 +9,7 @@ using Business.Features.CQRS._Generic.Response;
 using Business.Features.CQRS._Generic.Secured;
 using Core.Entities.Concrete.OzlukEntities;
 using Core.Entities.Enums;
+using Core.Utilities.Results.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,11 @@ namespace Business.Features.CQRS.KullaniciIslemleri.UserHandlers.Command
                 if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL)
                     return BaseResponse<UserDeleteCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
+                IResult deleteResult = await _kullaniciServis.DeleteKullaniciAsync(request.KullaniciUuid);
+                if (!deleteResult.Success)
+                    return BaseResponse<UserDeleteCommandResponseDTO>.Failure(deleteResult.Message, statusCode: 400);
+
+                return BaseResponse<UserDeleteCommandResponseDTO>.Success(new UserDeleteCommandResponseDTO { KullaniciUuid = request.KullaniciUuid }, deleteResult.Message, 200);
 
             }
             catch (Exception)
@@ -54,7 +60,6 @@ namespace Business.Features.CQRS.KullaniciIslemleri.UserHandlers.Command
 
                 throw;
             }
-            return BaseResponse<UserDeleteCommandResponseDTO>.Success(null, null, 200);
         }
     }
 }
