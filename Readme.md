@@ -1,8 +1,4 @@
-﻿Harika bir fikir. Proje dizinine ekleyebileceğin, hem kurulumu hem de versiyonlu (v1, v2, v3...) ilerlemeyi anlatan net bir `README.md` dosyasını aşağıda hazırladım.
-
-Bu içeriği kopyalayıp projenin ana dizininde (solution dosyasının olduğu yer) **`DATABASE_README.md`** adıyla kaydedebilirsin.
-
-````markdown
+﻿````markdown
 # 🗄️ Veritabanı ve Migrasyon Yönetimi (EF Core & MySQL)
 
 Bu proje, veritabanı işlemleri için **Entity Framework Core** ve **MySQL** kullanmaktadır. Migrasyonlar `DataAccess` katmanında tutulur, ancak komutlar ana dizinden `WebAPI` projesi referans alınarak çalıştırılır.
