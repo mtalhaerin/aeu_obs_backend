@@ -20,7 +20,7 @@ namespace Business.Concrete.FakulteManagers
         Task<IResult> DeleteAnaDalAsync(Guid anaDalUuid);
         Task<IDataResult<List<AnaDal>>> GetAllByPaged(
             string? anaDalAdi,
-            Guid? fakulteUuid,
+            Guid? bolumUuid,
             DateTime kurulusTarihi,
             DateTime olusturmaTarihi,
             DateTime guncellemeTarihi,
@@ -74,7 +74,7 @@ namespace Business.Concrete.FakulteManagers
 
         public async Task<IDataResult<List<AnaDal>>> GetAllByPaged(
             string? anaDalAdi,
-            Guid? fakulteUuid,
+            Guid? bolumUuid,
             DateTime kurulusTarihi,
             DateTime olusturmaTarihi,
             DateTime guncellemeTarihi,
@@ -84,7 +84,7 @@ namespace Business.Concrete.FakulteManagers
             int pageSize = pager?.PageSize <= 0 ? 10 : pager?.PageSize ?? 10;
 
             // Only pass fakulteUuid if it has a meaningful value (not null and not empty)
-            Guid? effectiveFakulteUuid = fakulteUuid.HasValue && fakulteUuid.Value != Guid.Empty ? fakulteUuid : null;
+            Guid? effectiveFakulteUuid = bolumUuid.HasValue && bolumUuid.Value != Guid.Empty ? bolumUuid : null;
 
             var (items, totalCount) = await _anaDalDal.GetPagedAsync(
                 anaDalAdi,

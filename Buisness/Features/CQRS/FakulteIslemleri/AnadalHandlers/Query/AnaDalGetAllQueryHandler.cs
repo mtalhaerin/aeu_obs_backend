@@ -22,7 +22,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Query
     {
         public string? Authorization { get; set; } = null;
         public string? AnaDalAdi { get; set; } = string.Empty;
-        public Guid? FakulteUuid { get; set; } = Guid.Empty;
+        public Guid? BolumUuid { get; set; } = Guid.Empty;
         public DateTime KurulusTarihi { get; set; } = DateTime.MinValue;
         public DateTime OlusturmaTarihi { get; set; } = DateTime.MinValue;
         public DateTime GuncellemeTarihi { get; set; } = DateTime.MaxValue;
@@ -51,7 +51,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Query
 
                 IDataResult<List<AnaDal>> result = await _anaDalService.GetAllByPaged(
                     request.AnaDalAdi,
-                    request.FakulteUuid,
+                    request.BolumUuid,
                     request.KurulusTarihi,
                     request.OlusturmaTarihi,
                     request.GuncellemeTarihi,
@@ -66,7 +66,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Query
                     {
                         AnaDalUuid = a.AnaDalUuid,
                         AnaDalAdi = a.AnaDalAdi,
-                        FakulteUuid = a.FakulteUuid,
+                        BolumUuid = a.BolumUuid,
                         KurulusTarihi = a.KurulusTarihi,
                         OlusturmaTarihi = a.OlusturmaTarihi,
                         GuncellemeTarihi = a.GuncellemeTarihi

@@ -23,7 +23,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Query
     {
         public string? Authorization { get; set; } = null;
         public string? BolumAdi { get; set; } = string.Empty;
-        public Guid? AnaDalUuid { get; set; } = Guid.Empty;
+        public Guid? FakulteUuid { get; set; } = Guid.Empty;
         public DateTime KurulusTarihi { get; set; } = DateTime.MinValue;
         public DateTime OlusturmaTarihi { get; set; } = DateTime.MinValue;
         public DateTime GuncellemeTarihi { get; set; } = DateTime.MaxValue;
@@ -52,7 +52,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Query
 
                 IDataResult<List<Bolum>> result = await _bolumService.GetAllByPaged(
                     request.BolumAdi,
-                    request.AnaDalUuid,
+                    request.FakulteUuid,
                     request.KurulusTarihi,
                     request.OlusturmaTarihi,
                     request.GuncellemeTarihi,
@@ -67,7 +67,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Query
                     {
                         BolumUuid = b.BolumUuid,
                         BolumAdi = b.BolumAdi,
-                        AnaDalUuid = b.AnaDalUuid,
+                        FakulteUuid = b.FakulteUuid,
                         KurulusTarihi = b.KurulusTarihi,
                         OlusturmaTarihi = b.OlusturmaTarihi,
                         GuncellemeTarihi = b.GuncellemeTarihi

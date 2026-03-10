@@ -21,7 +21,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Command
     {
         public string? Authorization { get; set; } = null;
         public string AnaDalAdi { get; set; } = string.Empty;
-        public Guid FakulteUuid { get; set; } = Guid.Empty;
+        public Guid BolumUuid { get; set; } = Guid.Empty;
         public DateTime KurulusTarihi { get; set; } = DateTime.MinValue;
     }
 
@@ -55,7 +55,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Command
                 {
                     AnaDalUuid = Guid.NewGuid(),
                     AnaDalAdi = request.AnaDalAdi,
-                    FakulteUuid = request.FakulteUuid,
+                    BolumUuid = request.BolumUuid,
                     KurulusTarihi = request.KurulusTarihi,
                     OlusturmaTarihi = DateTime.UtcNow,
                     GuncellemeTarihi = DateTime.UtcNow
@@ -70,7 +70,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Command
                 {
                     AnaDalUuid = newAnaDal.AnaDalUuid,
                     AnaDalAdi = newAnaDal.AnaDalAdi,
-                    FakulteUuid = newAnaDal.FakulteUuid,
+                    BolumUuid = newAnaDal.BolumUuid,
                     KurulusTarihi = newAnaDal.KurulusTarihi,
                     OlusturmaTarihi = newAnaDal.OlusturmaTarihi,
                     GuncellemeTarihi = newAnaDal.GuncellemeTarihi

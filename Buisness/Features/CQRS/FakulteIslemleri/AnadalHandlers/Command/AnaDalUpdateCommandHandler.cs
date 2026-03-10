@@ -21,7 +21,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Command
         public string? Authorization { get; set; } = null;
         public Guid AnaDalUuid { get; set; } = Guid.Empty;
         public string AnaDalAdi { get; set; } = string.Empty;
-        public Guid FakulteUuid { get; set; } = Guid.Empty;
+        public Guid BolumUuid { get; set; } = Guid.Empty;
         public DateTime KurulusTarihi { get; set; } = DateTime.MinValue;
     }
 
@@ -63,7 +63,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Command
 
                 // Update the AnaDal properties
                 anaDalToUpdate.AnaDalAdi = request.AnaDalAdi;
-                anaDalToUpdate.FakulteUuid = request.FakulteUuid;
+                anaDalToUpdate.BolumUuid = request.BolumUuid;
                 anaDalToUpdate.KurulusTarihi = request.KurulusTarihi;
                 anaDalToUpdate.GuncellemeTarihi = DateTime.UtcNow;
 
@@ -76,7 +76,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Command
                 {
                     AnaDalUuid = anaDalToUpdate.AnaDalUuid,
                     AnaDalAdi = anaDalToUpdate.AnaDalAdi,
-                    FakulteUuid = anaDalToUpdate.FakulteUuid,
+                    BolumUuid = anaDalToUpdate.BolumUuid,
                     KurulusTarihi = anaDalToUpdate.KurulusTarihi,
                     OlusturmaTarihi = anaDalToUpdate.OlusturmaTarihi,
                     GuncellemeTarihi = anaDalToUpdate.GuncellemeTarihi

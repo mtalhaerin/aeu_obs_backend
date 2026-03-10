@@ -47,7 +47,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Query
                 {
                     AnaDalUuid = result.Data.AnaDalUuid,
                     AnaDalAdi = result.Data.AnaDalAdi,
-                    FakulteUuid = result.Data.FakulteUuid,
+                    BolumUuid = result.Data.BolumUuid,
                     KurulusTarihi = result.Data.KurulusTarihi,
                     OlusturmaTarihi = result.Data.OlusturmaTarihi,
                     GuncellemeTarihi = result.Data.GuncellemeTarihi

@@ -1,7 +1,7 @@
-using Business.DTOs.RequestDTOs.FakulteIslemleriDTOs.AnadalDTOs.CommandDTOs;
-using Business.DTOs.RequestDTOs.FakulteIslemleriDTOs.AnadalDTOs.QueryDTOs;
-using Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Command;
-using Business.Features.CQRS.FakulteIslemleri.AnaDalHandlers.Query;
+using Business.DTOs.RequestDTOs.FakulteIslemleriDTOs.BolumDTOs.CommandDTOs;
+using Business.DTOs.RequestDTOs.FakulteIslemleriDTOs.BolumDTOs.QueryDTOs;
+using Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Command;
+using Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Query;
 using Core.Utilities.Paging;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,12 +24,12 @@ namespace WebAPI.Controllers.FakulteIslemleri
         [HttpGet("majors")]
         [Authorize]
         [Tags("Major: General")]
-        public async Task<IActionResult> GetAnaDallar([FromHeader(Name = "Authorization")] string token, [FromQuery] AnaDalGetAllQueryRequestDTO query, int page, int pageSize)
+        public async Task<IActionResult> GetBolumler([FromHeader(Name = "Authorization")] string token, [FromQuery] BolumGetAllQueryRequestDTO query, int page, int pageSize)
         {
-            return await SendQuery(new AnaDalGetAllQuery
+            return await SendQuery(new BolumGetAllQuery
             {
                 Authorization = token,
-                AnaDalAdi = query.AnaDalAdi,
+                BolumAdi = query.BolumAdi,
                 FakulteUuid = query.FakulteUuid,
                 KurulusTarihi = query.KurulusTarihi,
                 OlusturmaTarihi = query.OlusturmaTarihi,
@@ -41,24 +41,24 @@ namespace WebAPI.Controllers.FakulteIslemleri
         [HttpGet("major")]
         [Tags("Major: General")]
         [Authorize]
-        public async Task<IActionResult> GetAnaDal([FromHeader(Name = "Authorization")] string token, [FromQuery] AnaDalQueryRequestDTO body)
+        public async Task<IActionResult> GetBolum([FromHeader(Name = "Authorization")] string token, [FromQuery] BolumQueryRequestDTO body)
         {
-            return await SendQuery(new AnaDalQuery
+            return await SendQuery(new BolumQuery
             {
                 Authorization = token,
-                AnaDalUuid = body.AnaDalUuid
+                BolumUuid = body.BolumUuid
             });
         }
 
         [HttpPost("major")]
         [Tags("Major: General")]
         [Authorize]
-        public async Task<IActionResult> CreateAnaDal([FromHeader(Name = "Authorization")] string token, [FromBody] AnaDalAddCommandRequestDTO body)
+        public async Task<IActionResult> CreateBolum([FromHeader(Name = "Authorization")] string token, [FromBody] BolumAddCommandRequestDTO body)
         {
-            return await SendCommand(new AnaDalAddCommand
+            return await SendCommand(new BolumAddCommand
             {
                 Authorization = token,
-                AnaDalAdi = body.AnaDalAdi,
+                BolumAdi = body.BolumAdi,
                 FakulteUuid = body.FakulteUuid,
                 KurulusTarihi = body.KurulusTarihi
             });
@@ -67,13 +67,13 @@ namespace WebAPI.Controllers.FakulteIslemleri
         [HttpPut("major")]
         [Tags("Major: General")]
         [Authorize]
-        public async Task<IActionResult> UpdateAnaDal([FromHeader(Name = "Authorization")] string token, [FromBody] AnaDalUpdateCommandRequestDTO body)
+        public async Task<IActionResult> UpdateBolum([FromHeader(Name = "Authorization")] string token, [FromBody] BolumUpdateCommandRequestDTO body)
         {
-            return await SendCommand(new AnaDalUpdateCommand
+            return await SendCommand(new BolumUpdateCommand
             {
                 Authorization = token,
-                AnaDalUuid = body.AnaDalUuid,
-                AnaDalAdi = body.AnaDalAdi,
+                BolumUuid = body.BolumUuid,
+                BolumAdi = body.BolumAdi,
                 FakulteUuid = body.FakulteUuid,
                 KurulusTarihi = body.KurulusTarihi
             });
@@ -82,12 +82,12 @@ namespace WebAPI.Controllers.FakulteIslemleri
         [HttpDelete("major")]
         [Tags("Major: General")]
         [Authorize]
-        public async Task<IActionResult> DeleteAnaDal([FromHeader(Name = "Authorization")] string token, [FromBody] AnaDalDeleteCommandRequestDTO body)
+        public async Task<IActionResult> DeleteBolum([FromHeader(Name = "Authorization")] string token, [FromBody] BolumDeleteCommandRequestDTO body)
         {
-            return await SendCommand(new AnaDalDeleteCommand
+            return await SendCommand(new BolumDeleteCommand
             {
                 Authorization = token,
-                AnaDalUuid = body.AnaDalUuid
+                BolumUuid = body.BolumUuid
             });
         }
     }

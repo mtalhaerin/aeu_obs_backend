@@ -20,7 +20,7 @@ namespace Business.Concrete.FakulteManagers
         Task<IResult> DeleteBolumAsync(Guid bolumUuid);
         Task<IDataResult<List<Bolum>>> GetAllByPaged(
             string? bolumAdi,
-            Guid? anaDalUuid,
+            Guid? fakulteUuid,
             DateTime kurulusTarihi,
             DateTime olusturmaTarihi,
             DateTime guncellemeTarihi,
@@ -74,7 +74,7 @@ namespace Business.Concrete.FakulteManagers
 
         public async Task<IDataResult<List<Bolum>>> GetAllByPaged(
             string? bolumAdi,
-            Guid? anaDalUuid,
+            Guid? fakulteUuid,
             DateTime kurulusTarihi,
             DateTime olusturmaTarihi,
             DateTime guncellemeTarihi,
@@ -85,7 +85,7 @@ namespace Business.Concrete.FakulteManagers
 
             var (items, totalCount) = await _bolumDal.GetPagedAsync(
                 bolumAdi,
-                anaDalUuid,
+                fakulteUuid,
                 kurulusTarihi == default ? null : kurulusTarihi,
                 olusturmaTarihi == default ? null : olusturmaTarihi,
                 guncellemeTarihi == default ? null : guncellemeTarihi,

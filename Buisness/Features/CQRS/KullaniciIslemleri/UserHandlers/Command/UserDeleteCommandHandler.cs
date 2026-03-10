@@ -48,6 +48,9 @@ namespace Business.Features.CQRS.KullaniciIslemleri.UserHandlers.Command
                 if (kullanici.KullaniciTipi != KullaniciTipi.PERSONEL)
                     return BaseResponse<UserDeleteCommandResponseDTO>.Failure("Unauthorized", statusCode: 401);
 
+                if (kullanici.KullaniciUuid == request.KullaniciUuid)
+                    return BaseResponse<UserDeleteCommandResponseDTO>.Failure("You can not delete yourself.", statusCode: 409);
+
                 IResult deleteResult = await _kullaniciServis.DeleteKullaniciAsync(request.KullaniciUuid);
                 if (!deleteResult.Success)
                     return BaseResponse<UserDeleteCommandResponseDTO>.Failure(deleteResult.Message, statusCode: 400);

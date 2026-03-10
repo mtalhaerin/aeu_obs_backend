@@ -15,7 +15,7 @@ namespace DataAccess.Concrete.EntityFramework.FakulteDals
     {
         Task<(List<Bolum>, int)> GetPagedAsync(
             string? bolumAdi,
-            Guid? anaDalUuid,
+            Guid? fakulteUuid,
             DateTime? kurulusTarihi,
             DateTime? olusturmaTarihi,
             DateTime? guncellemeTarihi,
@@ -27,7 +27,7 @@ namespace DataAccess.Concrete.EntityFramework.FakulteDals
     {
         public async Task<(List<Bolum>, int)> GetPagedAsync(
             string? bolumAdi,
-            Guid? anaDalUuid,
+            Guid? fakulteUuid,
             DateTime? kurulusTarihi,
             DateTime? olusturmaTarihi,
             DateTime? guncellemeTarihi,
@@ -41,8 +41,8 @@ namespace DataAccess.Concrete.EntityFramework.FakulteDals
             if (!string.IsNullOrEmpty(bolumAdi))
                 query = query.Where(b => b.BolumAdi.Contains(bolumAdi));
 
-            if (anaDalUuid.HasValue && anaDalUuid != Guid.Empty)
-                query = query.Where(b => b.AnaDalUuid == anaDalUuid.Value);
+            if (fakulteUuid.HasValue && fakulteUuid != Guid.Empty)
+                query = query.Where(b => b.FakulteUuid == fakulteUuid.Value);
 
             if (kurulusTarihi.HasValue)
                 query = query.Where(b => b.KurulusTarihi >= kurulusTarihi.Value);

@@ -21,7 +21,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Command
         public string? Authorization { get; set; } = null;
         public Guid BolumUuid { get; set; } = Guid.Empty;
         public string BolumAdi { get; set; } = string.Empty;
-        public Guid AnaDalUuid { get; set; } = Guid.Empty;
+        public Guid FakulteUuid { get; set; } = Guid.Empty;
         public DateTime KurulusTarihi { get; set; } = DateTime.MinValue;
     }
 
@@ -63,7 +63,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Command
 
                 // Update the Bolum properties
                 bolumToUpdate.BolumAdi = request.BolumAdi;
-                bolumToUpdate.AnaDalUuid = request.AnaDalUuid;
+                bolumToUpdate.FakulteUuid = request.FakulteUuid;
                 bolumToUpdate.KurulusTarihi = request.KurulusTarihi;
                 bolumToUpdate.GuncellemeTarihi = DateTime.UtcNow;
 
@@ -76,7 +76,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Command
                 {
                     BolumUuid = bolumToUpdate.BolumUuid,
                     BolumAdi = bolumToUpdate.BolumAdi,
-                    AnaDalUuid = bolumToUpdate.AnaDalUuid,
+                    FakulteUuid = bolumToUpdate.FakulteUuid,
                     KurulusTarihi = bolumToUpdate.KurulusTarihi,
                     OlusturmaTarihi = bolumToUpdate.OlusturmaTarihi,
                     GuncellemeTarihi = bolumToUpdate.GuncellemeTarihi

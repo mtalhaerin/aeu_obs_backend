@@ -477,8 +477,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasMaxLength(150)
                       .IsRequired();
 
-                entity.Property(e => e.FakulteUuid)
-                      .HasColumnName("fakulte_uuid")
+                entity.Property(e => e.BolumUuid)
+                      .HasColumnName("bolum_uuid")
                       .HasMaxLength(36)
                       .IsRequired();
 
@@ -500,9 +500,9 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 // Fixed: Properly map the bidirectional relationship
-                entity.HasOne(e => e.Fakulte)
-                      .WithMany(f => f.AnaDallar)  // This was missing - should reference the collection in Fakulte
-                      .HasForeignKey(e => e.FakulteUuid)
+                entity.HasOne(e => e.Bolum)
+                      .WithMany(f => f.Anadallar)  // This was missing - should reference the collection in Fakulte
+                      .HasForeignKey(e => e.BolumUuid)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -523,8 +523,8 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .HasMaxLength(150)
                       .IsRequired();
 
-                entity.Property(e => e.AnaDalUuid)
-                      .HasColumnName("ana_dal_uuid")
+                entity.Property(e => e.FakulteUuid)
+                      .HasColumnName("Fakulte_uuid")
                       .HasMaxLength(36)
                       .IsRequired();
 
@@ -546,9 +546,9 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
                       .ValueGeneratedOnAddOrUpdate();
 
                 // Fixed: Complete the relationship configuration
-                entity.HasOne(e => e.AnaDal)
+                entity.HasOne(e => e.Fakulte)
                       .WithMany(a => a.Bolumler)  // Reference the collection in AnaDal
-                      .HasForeignKey(e => e.AnaDalUuid)
+                      .HasForeignKey(e => e.FakulteUuid)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 

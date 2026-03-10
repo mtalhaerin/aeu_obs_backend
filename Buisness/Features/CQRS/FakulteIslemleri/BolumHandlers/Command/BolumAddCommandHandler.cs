@@ -20,7 +20,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Command
     {
         public string? Authorization { get; set; } = null;
         public string BolumAdi { get; set; } = string.Empty;
-        public Guid AnaDalUuid { get; set; } = Guid.Empty;
+        public Guid FakulteUuid { get; set; } = Guid.Empty;
         public DateTime KurulusTarihi { get; set; } = DateTime.MinValue;
     }
 
@@ -54,7 +54,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Command
                 {
                     BolumUuid = Guid.NewGuid(),
                     BolumAdi = request.BolumAdi,
-                    AnaDalUuid = request.AnaDalUuid,
+                    FakulteUuid = request.FakulteUuid,
                     KurulusTarihi = request.KurulusTarihi,
                     OlusturmaTarihi = DateTime.UtcNow,
                     GuncellemeTarihi = DateTime.UtcNow
@@ -69,7 +69,7 @@ namespace Business.Features.CQRS.FakulteIslemleri.BolumHandlers.Command
                 {
                     BolumUuid = newBolum.BolumUuid,
                     BolumAdi = newBolum.BolumAdi,
-                    AnaDalUuid = newBolum.AnaDalUuid,
+                    FakulteUuid = newBolum.FakulteUuid,
                     KurulusTarihi = newBolum.KurulusTarihi,
                     OlusturmaTarihi = newBolum.OlusturmaTarihi,
                     GuncellemeTarihi = newBolum.GuncellemeTarihi

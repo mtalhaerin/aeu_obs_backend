@@ -17,8 +17,8 @@ namespace Entities.Concrete.FakulteEntities
         public DateTime GuncellemeTarihi { get; set; }
 
         // Navigation collections
-        public ICollection<AnaDal> AnaDallar { get; set; } = new
-        List<AnaDal>();
+        public ICollection<Bolum> Bolumler { get; set; } = new
+        List<Bolum>();
 
     }
 }

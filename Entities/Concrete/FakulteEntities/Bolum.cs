@@ -6,13 +6,14 @@ namespace Entities.Concrete.FakulteEntities
     {
         public Guid BolumUuid { get; set; } = Guid.NewGuid();
         public string BolumAdi { get; set; } = string.Empty;
-        public Guid AnaDalUuid { get; set; } = Guid.Empty;
+        public Guid FakulteUuid { get; set; } = Guid.Empty;
         public DateTime KurulusTarihi { get; set; }
         public DateTime OlusturmaTarihi { get; set; }
         public DateTime GuncellemeTarihi { get; set; }
 
         // Reference navigation
-        public AnaDal? AnaDal { get; set; }
+        public Fakulte? Fakulte { get; set; }
+        public ICollection<AnaDal> Anadallar { get; set; } = new List<AnaDal>();
 
         public ICollection<AkademisyenBolumAtama> AkademisyenAtamalari { get; set; } = 
             new List<AkademisyenBolumAtama>();
