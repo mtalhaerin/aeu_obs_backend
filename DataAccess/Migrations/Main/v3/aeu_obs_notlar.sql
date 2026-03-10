@@ -1,0 +1,68 @@
+-- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
+--
+-- Host: 100.64.207.39    Database: aeu_obs
+-- ------------------------------------------------------
+-- Server version	9.5.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
+SET @@SESSION.SQL_LOG_BIN= 0;
+
+--
+-- GTID state at the beginning of the backup 
+--
+
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'c8635278-2e63-11f0-b46c-1aebcda1d33f:1-3675';
+
+--
+-- Table structure for table `notlar`
+--
+
+DROP TABLE IF EXISTS `notlar`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notlar` (
+  `not_uuid` varchar(36) NOT NULL DEFAULT (uuid()),
+  `sinav_uuid` varchar(36) NOT NULL,
+  `ogrenci_uuid` varchar(36) NOT NULL,
+  `alinan_puan` int NOT NULL DEFAULT '0',
+  `olusturma_tarihi` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `guncelleme_tarihi` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`not_uuid`),
+  UNIQUE KEY `sinav_uuid` (`sinav_uuid`,`ogrenci_uuid`),
+  KEY `notlar_ibfk_2` (`ogrenci_uuid`),
+  CONSTRAINT `notlar_ibfk_1` FOREIGN KEY (`sinav_uuid`) REFERENCES `sinavlar` (`sinav_uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `notlar_ibfk_2` FOREIGN KEY (`ogrenci_uuid`) REFERENCES `kullanicilar` (`kullanici_uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notlar`
+--
+
+LOCK TABLES `notlar` WRITE;
+/*!40000 ALTER TABLE `notlar` DISABLE KEYS */;
+INSERT INTO `notlar` VALUES ('e90c305f-159e-11f1-b519-2e6112e38707','aaaaaaaa-1111-1111-1111-111111111111','653479ae-d1cc-11f0-9e59-2e6112e38707',55,'2026-03-01 18:46:08','2026-03-01 18:46:08'),('e90c3659-159e-11f1-b519-2e6112e38707','bbbbbbbb-2222-2222-2222-222222222222','653479ae-d1cc-11f0-9e59-2e6112e38707',70,'2026-03-01 18:46:08','2026-03-01 18:46:08'),('e91da151-159e-11f1-b519-2e6112e38707','aaaaaaaa-1111-1111-1111-111111111111','653482ab-d1cc-11f0-9e59-2e6112e38707',85,'2026-03-01 18:46:08','2026-03-01 18:46:08'),('e91da7ea-159e-11f1-b519-2e6112e38707','bbbbbbbb-2222-2222-2222-222222222222','653482ab-d1cc-11f0-9e59-2e6112e38707',90,'2026-03-01 18:46:08','2026-03-01 18:46:08');
+/*!40000 ALTER TABLE `notlar` ENABLE KEYS */;
+UNLOCK TABLES;
+SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2026-03-11  2:55:16
